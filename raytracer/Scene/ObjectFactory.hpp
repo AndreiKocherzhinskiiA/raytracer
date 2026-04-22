@@ -5,6 +5,8 @@
 #include <string>
 #include <unordered_map>
 
+
+//NEED TO GET SHAPE FROM coning file.
 class ObjectFactory
 {
 private:

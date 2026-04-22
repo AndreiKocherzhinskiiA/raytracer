@@ -3,16 +3,16 @@
 #include "Point3D.hpp"
 #include "Vector3D.hpp"
 
-class Rectangle3D
-{
+class Rectangle3D {
 public:
-    Math::Point3D  origin = {-2, -1.5, -1};
-    Math::Vector3D bottom_side = {4, 0, 0};
-    Math::Vector3D left_side = {0, 3, 0};
+    Math::Point3D  origin;
+    Math::Vector3D bottom_side;
+    Math::Vector3D left_side;
 
-    Rectangle3D() = default;
+    Rectangle3D(): origin(-2, -1.5, -1), bottom_side(4, 0, 0), left_side(0, 3, 0) {}
 
-    Rectangle3D(Math::Point3D origin, Math::Vector3D bottom_side, Math::Vector3D left_side): origin(origin), bottom_side(bottom_side), left_side(left_side) {}
+    Rectangle3D(Math::Point3D origin, Math::Vector3D bottom_side, Math::Vector3D left_side)
+        : origin(origin), bottom_side(bottom_side), left_side(left_side) {}
 
     ~Rectangle3D() = default;
 
