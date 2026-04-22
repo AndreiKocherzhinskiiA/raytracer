@@ -1,0 +1,15 @@
+#pragma once
+#include "../math/Ray.hpp"
+#include "HitObject.hpp"
+#include "Color.hpp"
+
+namespace RayTracer {
+    class IMaterial
+    {
+    private:
+        /* data */
+    public:
+        virtual bool scatter(const Ray& rayIn, const HitObject& rec, Color& color, Ray& scattered) const = 0;
+        ~IMaterial() = default;
+    };
+}
