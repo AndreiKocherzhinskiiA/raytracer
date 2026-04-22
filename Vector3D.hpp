@@ -15,11 +15,19 @@ namespace Math
 
         Vector3D()= default;
         Vector3D(double x, double y, double z): x(x), y(y), z(z) {};
+        double lengthSquared() const {
+            return x * x + y * y + z * z;
+        }
         double length() const {
             return std::sqrt(x * x + y * y + z * z);
         }
         double dot(const Vector3D& other) const {
             return x * other.x + y * other.y + z * other.z;
+        }
+        Vector3D normalize() const {
+            double len = length();
+            if (len == 0.0) return *this;
+            return *this / len;
         }
 
         Vector3D operator+(const Vector3D &other) const{

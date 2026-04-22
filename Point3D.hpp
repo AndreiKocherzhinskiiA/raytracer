@@ -22,6 +22,11 @@ namespace Math
         double dot(const Point3D& other) const {
             return x * other.x + y * other.y + z * other.z;
         }
+
+        Math::Point3D operator-(const Math::Vector3D& v) const {
+            return Math::Point3D(x - v.x, y - v.y, z - v.z);
+        }
+
         Point3D operator+(const Vector3D& v)const {
             Point3D newP;
             newP.x = x + v.x;

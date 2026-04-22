@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RayTracer.hpp"
+#include "Ray.hpp"
 
 namespace RayTracer {
     class Sphere
