@@ -1,6 +1,9 @@
 #pragma once
 
-#include "Ray.hpp"
+#include "../math/Ray.hpp"
+#include "../Core/IObject.hpp"
+#include "../Core/IMaterial.hpp"
+#include "../Core/HitObject.hpp"
 
 namespace RayTracer {
     class Sphere : public IObject
@@ -8,8 +11,9 @@ namespace RayTracer {
     private:
         Math::Point3D center;
         double radius;
+        std::shared_ptr<IMaterial> material;
     public:
-        Sphere(Math::Point3D center, double radius): center(center), radius(radius) {};
+        Sphere(Math::Point3D center, double radius, std::shared_ptr<IMaterial> material): center(center), radius(radius), material(material) {};
         //NEED TO FIX TO WORK WITH THE NEW PROTOTYPE;
         // ray = incoming ray;
         // discriminant must be between tMax and TMin return false if not
@@ -22,9 +26,19 @@ namespace RayTracer {
             auto discriminant = h * h - a * c;
             if (discriminant < 0) {
                 return false;
-            } else {
-                return (h - std::sqrt(discriminant) ) / a;
             }
+            double t = (-h - std::sqrt(discriminant)) / a;
+            if (t < tMin || t > tMax) {
+                t = (-h + std::sqrt(discriminant)) / a; // other root
+                if (t < tMin || t > tMax) {
+                    return false;
+                }
+            }
+            obj.t = t;
+            obj.point = ray.at(t);
+            obj.normal = (obj.point - center) / radius;
+            obj.material = material;
+            return true;
         }
         ~Sphere() = default;
     };
