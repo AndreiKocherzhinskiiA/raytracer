@@ -1,15 +1,16 @@
-CXX      = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -I.
+CXX       = g++
+CXXFLAGS  = -std=c++17 -Wall -Wextra -I. -lconfig++
+LDFLAGS   = -lconfig++
 
-NAME     = raytracer
+NAME      = raytracer
 
-SRCS     = main.cpp
-OBJS     = $(SRCS:.cpp=.o)
+SRCS      = Raytracer/main.cpp
+OBJS      = $(SRCS:.cpp=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS) $(LDFLAGS)
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@

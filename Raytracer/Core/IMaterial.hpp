@@ -2,6 +2,7 @@
 #include "../math/Ray.hpp"
 #include "HitObject.hpp"
 #include "Color.hpp"
+class HitObject;
 
 namespace RayTracer {
     class IMaterial

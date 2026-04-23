@@ -21,7 +21,7 @@ namespace RayTracer {
         };
     public:
         // Render(/* args */) = default;
-        ~Render();
+        ~Render() = default;
         Render(const HittableList& scene, const Camera& cam) {
             std::cout << cam.image_width << " " << cam.image_height << "\n255\n";
             HitObject hit_x;
