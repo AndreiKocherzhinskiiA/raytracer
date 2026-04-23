@@ -20,6 +20,7 @@ int main(int argc, char **args)
     }
     RayTracer::Camera cam(args[1]);
     RayTracer::HittableList hittableList;
+    
     // RayTracer::Render(hittableList, cam);
     return 0;
 }

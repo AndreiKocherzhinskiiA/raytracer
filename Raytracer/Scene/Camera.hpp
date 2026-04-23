@@ -3,7 +3,6 @@
 #include "../math/Ray.hpp"
 #include "Rectangle3D.hpp"
 #include <string>
-#include <libconfig.h++>
 #include <iostream>
 
 namespace RayTracer {

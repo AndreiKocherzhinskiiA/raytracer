@@ -4,6 +4,7 @@
 #include "../Core/IObject.hpp"
 #include "../Core/IMaterial.hpp"
 #include "../Core/HitObject.hpp"
+#include "../Core/Color.hpp"
 
 namespace RayTracer {
     class Sphere : public IObject
@@ -12,8 +13,9 @@ namespace RayTracer {
         Math::Point3D center;
         double radius;
         std::shared_ptr<IMaterial> material;
+        Color color = {0 ,0 ,0};
     public:
-        Sphere(Math::Point3D center, double radius, std::shared_ptr<IMaterial> material): center(center), radius(radius), material(material) {};
+        Sphere(Math::Point3D center, double radius, std::shared_ptr<IMaterial> material, Color color): center(center), radius(radius), material(material), color(color) {};
         //NEED TO FIX TO WORK WITH THE NEW PROTOTYPE;
         // ray = incoming ray;
         // discriminant must be between tMax and TMin return false if not
