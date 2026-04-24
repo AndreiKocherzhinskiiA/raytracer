@@ -20,6 +20,7 @@ namespace RayTracer {
         Scene();
         void loadCam();
         void loadObjects();
+        void loadLights();
         void init(std::string path);
         ~Scene() = default;
 };
