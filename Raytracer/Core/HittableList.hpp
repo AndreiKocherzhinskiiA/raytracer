@@ -17,12 +17,12 @@ namespace RayTracer {
             objects.push_back(obj);
         }
 
-        bool hit(const RayTracer::Ray& r, double tMin, double tMax, HitObject& rec) const override {
+        bool hit(const RayTracer::Ray& r, HitObject& rec, double tMin, double tMax) const override {
             HitObject tempRec;
             bool hitAnything = false;
 
             for (const auto& obj : objects) {
-                if (obj->hit(r, tMin, tMax, tempRec)) {
+                if (obj->hit(r, tempRec, tMin, tMax)) {
                     hitAnything = true;
                     tMax = tempRec.t;
                     rec = tempRec;

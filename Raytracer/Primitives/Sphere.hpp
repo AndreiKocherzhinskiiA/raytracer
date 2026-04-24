@@ -20,7 +20,7 @@ namespace RayTracer {
         // ray = incoming ray;
         // discriminant must be between tMax and TMin return false if not
         // obj = if you it fill with info
-        bool hit(const Ray& ray, double tMax, double tMin, HitObject &obj)const override {
+        bool hit(const Ray& ray, HitObject &obj, double tMax, double tMin)const override {
             Math::Vector3D pointToCircleCenter = center - ray.origin;
             auto a = ray.direction.lengthSquared();
             auto h = ray.direction.dot(pointToCircleCenter);
