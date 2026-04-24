@@ -7,7 +7,8 @@
 #include <string>
 #include "Core/Color.hpp"
 #include "Core/HittableList.hpp"
-#include "Core/Render.hpp"
+#include "Core/Renderer.hpp"
+#include "Core/Renderer.hpp"
 
 
 int main(int argc, char **args)
@@ -18,9 +19,9 @@ int main(int argc, char **args)
         << "SCENE_FILE: scene configuration" << std::endl;
         return 84;
     }
-    RayTracer::Camera cam(args[1]);
-    RayTracer::HittableList hittableList;
-    
-    // RayTracer::Render(hittableList, cam);
+    RayTracer::Scene scene;
+    scene.init(args[1]);
+    RayTracer::Renderer renderer(scene);
+    renderer.render();
     return 0;
 }
