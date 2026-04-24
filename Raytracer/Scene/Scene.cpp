@@ -1,6 +1,7 @@
 #include "Scene.hpp"
 
 namespace RayTracer {
+
         Scene::Scene() {
 
         };
@@ -10,8 +11,14 @@ namespace RayTracer {
         void Scene::loadObjects() {
 
         };
-        void Scene::init(std::string path) {
 
+        void Scene::loadLights() {
+
+        };
+        void Scene::init(std::string path) {
+                loadCam();
+                loadObjects();
+                loadLights();
         };
 }
 

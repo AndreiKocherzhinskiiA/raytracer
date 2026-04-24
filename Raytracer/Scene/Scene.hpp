@@ -12,7 +12,6 @@ namespace RayTracer {
     class Scene
     {
     private:
-
     public:
         Camera cam;
         HittableList hittable_list;
