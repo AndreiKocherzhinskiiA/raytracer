@@ -3,15 +3,16 @@
 #include "../Scene/Scene.hpp"
 #include "HitObject.hpp"
 #include "Color.hpp"
+
 class HitObject;
 
 namespace RayTracer {
-    class ILights
+    class ILight
     {
     private:
-        /* data */
     public:
         virtual void light(const HitObject& obj, Color& color, const Scene& scene) = 0;
-        ~ILights() = default;
+        virtual ~ILight() = default;
+        virtual Math::Point3D position() = 0;
     };
 }
