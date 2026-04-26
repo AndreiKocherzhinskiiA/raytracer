@@ -5,6 +5,8 @@
 #include "../Core/IMaterial.hpp"
 #include "../Core/HitObject.hpp"
 #include "../Core/Color.hpp"
+#include "../math/MathCalculations.hpp"
+#include <cmath>
 
 namespace RayTracer {
     class Sphere : public IObject
@@ -15,11 +17,7 @@ namespace RayTracer {
         std::shared_ptr<IMaterial> material;
     public:
         Sphere(Math::Point3D center, double radius, std::shared_ptr<IMaterial> material): center(center), radius(radius), material(material) {};
-        //NEED TO FIX TO WORK WITH THE NEW PROTOTYPE;
-        // ray = incoming ray;
-        // discriminant must be between tMax and TMin return false if not
-        // obj = if you it fill with info
-        bool hit(const Ray& ray, HitObject &obj, double tMax, double tMin)const override {
+        bool hit(const Ray& ray, HitObject &obj, double tMin, double tMax)const override {
             Math::Vector3D pointToCircleCenter = center - ray.origin;
             auto a = ray.direction.lengthSquared();
             auto h = ray.direction.dot(pointToCircleCenter);
@@ -28,15 +26,18 @@ namespace RayTracer {
             if (discriminant < 0) {
                 return false;
             }
-            double t = (-h - std::sqrt(discriminant)) / a;
-            if (t < tMin || t > tMax) {
-                t = (-h + std::sqrt(discriminant)) / a; // other root
-                if (t < tMin || t > tMax) {
-                    return false;
-                }
+            const double sqrtDiscriminant = std::sqrt(discriminant);
+            const auto root = Math::Calc::nearestRoot(
+                (h - sqrtDiscriminant) / a,
+                (h + sqrtDiscriminant) / a,
+                tMin,
+                tMax
+            );
+            if (!root.hit) {
+                return false;
             }
-            obj.t = t;
-            obj.point = ray.at(t);
+            obj.t = root.t;
+            obj.point = ray.at(root.t);
             obj.normal = (obj.point - center) / radius;
             obj.material = material;
             return true;

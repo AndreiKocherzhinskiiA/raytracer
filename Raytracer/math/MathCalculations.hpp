@@ -8,8 +8,7 @@
 #pragma once
 
 #include <utility>
-#include "RayTracer.hpp"
-#include "Sphere.hpp"
+#include "Ray.hpp"
 
 namespace Math::Calc {
     inline constexpr double kEpsilon = 1e-6;
@@ -27,6 +26,7 @@ namespace Math::Calc {
     double degreesToRadians(double degrees);
     Math::Vector3D normalize(const Math::Vector3D &v);
     double clamp(double value, double min, double max);
+    HitResult nearestRoot(double rootA, double rootB, double tMin, double tMax);
 
     std::pair<double, double> pixelToNormalized(int x, int y, int width, int height);
     std::pair<double, double> normalizedToScreen(double u, double v, double aspect, double fovRadians);
@@ -52,14 +52,12 @@ namespace Math::Calc {
     );
 
     Math::Point3D pointAt(const RayTracer::Ray &ray, double t);
-    HitResult intersectSphere(const RayTracer::Ray &ray, const RayTracer::Sphere &sphere);
     HitResult intersectPlane(
         const RayTracer::Ray &ray,
         const Math::Point3D &planePoint,
         const Math::Vector3D &planeNormal
     );
 
-    Math::Vector3D sphereNormal(const Math::Point3D &p, const RayTracer::Sphere &sphere);
     Math::Vector3D planeNormal(const Math::Vector3D &n);
 
     Math::Vector3D directionalLightVector(const Math::Vector3D &lightDirection);

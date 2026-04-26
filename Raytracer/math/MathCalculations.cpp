@@ -38,6 +38,22 @@ namespace Math::Calc {
         return value;
     }
 
+    HitResult nearestRoot(double rootA, double rootB, double tMin, double tMax)
+    {
+        double nearest = std::numeric_limits<double>::infinity();
+
+        if (rootA >= tMin && rootA <= tMax) {
+            nearest = rootA;
+        }
+        if (rootB >= tMin && rootB <= tMax && rootB < nearest) {
+            nearest = rootB;
+        }
+        if (!std::isfinite(nearest)) {
+            return {false, -1.0};
+        }
+        return {true, nearest};
+    }
+
     std::pair<double, double> pixelToNormalized(int x, int y, int width, int height)
     {
         const double u = (static_cast<double>(x) + 0.5) / static_cast<double>(width);
@@ -93,36 +109,6 @@ namespace Math::Calc {
         return ray.origin + ray.direction * t;
     }
 
-    HitResult intersectSphere(const RayTracer::Ray &ray, const RayTracer::Sphere &sphere)
-    {
-        const Math::Vector3D oc = ray.origin - sphere.center;
-        const double a = ray.direction.dot(ray.direction);
-        const double b = 2.0 * ray.direction.dot(oc);
-        const double c = oc.dot(oc) - sphere.radius * sphere.radius;
-        const double delta = b * b - 4.0 * a * c;
-
-        if (delta < 0.0) {
-            return {false, -1.0};
-        }
-
-        const double sqrtDelta = std::sqrt(delta);
-        const double invDenominator = 1.0 / (2.0 * a);
-        const double t0 = (-b - sqrtDelta) * invDenominator;
-        const double t1 = (-b + sqrtDelta) * invDenominator;
-
-        double t = std::numeric_limits<double>::infinity();
-        if (t0 > kEpsilon && t0 < t) {
-            t = t0;
-        }
-        if (t1 > kEpsilon && t1 < t) {
-            t = t1;
-        }
-        if (!std::isfinite(t)) {
-            return {false, -1.0};
-        }
-        return {true, t};
-    }
-
     HitResult intersectPlane(
         const RayTracer::Ray &ray,
         const Math::Point3D &planePoint,
@@ -142,11 +128,6 @@ namespace Math::Calc {
             return {false, -1.0};
         }
         return {true, t};
-    }
-
-    Math::Vector3D sphereNormal(const Math::Point3D &p, const RayTracer::Sphere &sphere)
-    {
-        return normalize(p - sphere.center);
     }
 
     Math::Vector3D planeNormal(const Math::Vector3D &n)

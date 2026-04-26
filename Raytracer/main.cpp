@@ -8,7 +8,6 @@
 #include "Core/Color.hpp"
 #include "Core/HittableList.hpp"
 #include "Core/Renderer.hpp"
-#include "Core/Renderer.hpp"
 
 
 int main(int argc, char **args)

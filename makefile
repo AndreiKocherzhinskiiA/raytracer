@@ -4,7 +4,8 @@ LDFLAGS   = -lconfig++
 
 NAME      = raytracer
 
-SRCS      = Raytracer/main.cpp
+SRCS      = Raytracer/main.cpp \
+            Raytracer/math/MathCalculations.cpp
 OBJS      = $(SRCS:.cpp=.o)
 
 all: $(NAME)
