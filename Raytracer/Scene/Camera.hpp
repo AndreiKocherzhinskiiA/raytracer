@@ -2,6 +2,8 @@
 
 #include "../math/Ray.hpp"
 #include "Rectangle3D.hpp"
+#include <cmath>
+#include <libconfig.h++>
 #include <string>
 #include <iostream>
 
@@ -19,7 +21,7 @@ public:
     Camera() = default;
     Camera(const std::string& file_path) {
         libconfig::Config cfg;
-        cfg.readFile(file_path);
+        cfg.readFile(file_path.c_str());
 
         cfg.lookupValue("camera.resolution.width", image_width);
         cfg.lookupValue("camera.resolution.height", image_height);
