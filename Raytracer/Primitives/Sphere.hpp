@@ -6,7 +6,6 @@
 #include "../Core/HitObject.hpp"
 #include "../Core/Color.hpp"
 #include "../math/MathCalculations.hpp"
-#include <cmath>
 
 namespace RayTracer {
     class Sphere : public IObject
@@ -18,21 +17,7 @@ namespace RayTracer {
     public:
         Sphere(Math::Point3D center, double radius, std::shared_ptr<IMaterial> material): center(center), radius(radius), material(material) {};
         bool hit(const Ray& ray, HitObject &obj, double tMin, double tMax)const override {
-            Math::Vector3D pointToCircleCenter = center - ray.origin;
-            auto a = ray.direction.lengthSquared();
-            auto h = ray.direction.dot(pointToCircleCenter);
-            auto c = pointToCircleCenter.lengthSquared() - radius * radius;
-            auto discriminant = h * h - a * c;
-            if (discriminant < 0) {
-                return false;
-            }
-            const double sqrtDiscriminant = std::sqrt(discriminant);
-            const auto root = Math::Calc::nearestRoot(
-                (h - sqrtDiscriminant) / a,
-                (h + sqrtDiscriminant) / a,
-                tMin,
-                tMax
-            );
+            const auto root = Math::Calc::intersectSphere(ray, center, radius, tMin, tMax);
             if (!root.hit) {
                 return false;
             }

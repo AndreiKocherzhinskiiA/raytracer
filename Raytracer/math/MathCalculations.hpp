@@ -52,6 +52,13 @@ namespace Math::Calc {
     );
 
     Math::Point3D pointAt(const RayTracer::Ray &ray, double t);
+    HitResult intersectSphere(
+        const RayTracer::Ray &ray,
+        const Math::Point3D &center,
+        double radius,
+        double tMin,
+        double tMax
+    );
     HitResult intersectPlane(
         const RayTracer::Ray &ray,
         const Math::Point3D &planePoint,

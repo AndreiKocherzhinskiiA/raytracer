@@ -109,6 +109,34 @@ namespace Math::Calc {
         return ray.origin + ray.direction * t;
     }
 
+    HitResult intersectSphere(
+        const RayTracer::Ray &ray,
+        const Math::Point3D &center,
+        double radius,
+        double tMin,
+        double tMax
+    )
+    {
+        const Math::Vector3D oc = center - ray.origin;
+        const double a = ray.direction.lengthSquared();
+        const double h = ray.direction.dot(oc);
+        const double c = oc.lengthSquared() - radius * radius;
+        const double discriminant = h * h - a * c;
+
+        if (discriminant < 0.0) {
+            return {false, -1.0};
+        }
+
+        const double sqrtDiscriminant = std::sqrt(discriminant);
+
+        return nearestRoot(
+            (h - sqrtDiscriminant) / a,
+            (h + sqrtDiscriminant) / a,
+            tMin,
+            tMax
+        );
+    }
+
     HitResult intersectPlane(
         const RayTracer::Ray &ray,
         const Math::Point3D &planePoint,
