@@ -10,14 +10,13 @@ namespace RayTracer {
     class Scene
     {
     private:
-        Camera cam;
-        HittableList hittable_list;
-
         void loadCam(const libconfig::Setting &camera);
         void loadObjects(const libconfig::Setting &primitives);
         void loadLights(const libconfig::Setting &lights);
 
     public:
+        Camera cam;
+        HittableList hittable_list;
         Scene();
         bool init(const std::string &path);
         ~Scene() = default;
