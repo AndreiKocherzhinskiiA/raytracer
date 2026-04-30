@@ -1,7 +1,6 @@
 #include "Scene.hpp"
 
 namespace RayTracer {
-
         Scene::Scene() {
 
         };
@@ -50,14 +49,27 @@ namespace RayTracer {
             }
            
         };
+        bool Scene::init(const std::string &path) {
+            libconfig::Config cfg;
 
-        void Scene::loadLights() {
+            try {
+                cfg.readFile(path.c_str());
+            } catch (const libconfig::FileIOException &e) {
+                std::cerr << "File IO error\n";
+                return false;
+            } catch (const libconfig::ParseException &e) {
+                std::cerr << "Parse error at " << e.getFile()
+                          << " ; " << e.getLine()
+                          << " - " << e.getError() << "\n";
+                return false;
+            }
 
-        };
-        void Scene::init(std::string path) {
-                loadCam();
-                loadObjects();
-                loadLights();
+            const libconfig::Setting &root = cfg.getRoot();
+
+            loadCam(root["camera"]);
+            loadObjects(root["primitives"]);
+            loadLights(root["lights"]);
+            return true;
         };
 }
 
