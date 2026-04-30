@@ -15,11 +15,11 @@ namespace RayTracer {
     public:
         Camera cam;
         HittableList hittable_list;
-        Lights lights;
+
+    public:
         Scene();
         void loadCam();
         void loadObjects();
-        void loadLights();
         void init(std::string path);
         ~Scene() = default;
 };

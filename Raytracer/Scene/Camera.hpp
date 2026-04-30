@@ -21,7 +21,7 @@ public:
     Camera() = default;
     Camera(const std::string& file_path) {
         libconfig::Config cfg;
-        cfg.readFile(file_path.c_str());
+        cfg.readFile(file_path);
 
         cfg.lookupValue("camera.resolution.width", image_width);
         cfg.lookupValue("camera.resolution.height", image_height);
@@ -36,13 +36,33 @@ public:
 
         cfg.lookupValue("camera.fieldOfView", field_of_view);
         makeScreen();
-        std::cout << "setup cam" << std::endl;
     }
+    // //Camera(const std::string& file_path) 
+    // {
+    //     libconfig::Config cfg;
+    //     cfg.readFile(file_path);
+
+    //     cfg.lookupValue("camera.resolution.width", image_width);
+    //     cfg.lookupValue("camera.resolution.height", image_height);
+
+    //     cfg.lookupValue("camera.position.x", origin.x);
+    //     cfg.lookupValue("camera.position.y", origin.y);
+    //     cfg.lookupValue("camera.position.z", origin.z);
+
+    //     cfg.lookupValue("camera.rotation.x", rotation.x);
+    //     cfg.lookupValue("camera.rotation.y", rotation.y);
+    //     cfg.lookupValue("camera.rotation.z", rotation.z);
+
+    //     cfg.lookupValue("camera.fieldOfView", field_of_view);
+    //     makeScreen();
+    //     std::cout << "setup cam" << std::endl;
+    // }
     Camera(Math::Point3D origin, Rectangle3D screen)
         : origin(origin), screen(screen) {}
 
     void makeScreen() {
-        double aspect = image_height * 1 / image_width;
+        //double aspect = image_height * 1 / image_width;
+        double aspect = (double)image_width / (double)image_height;
         double height = 2 * tan(field_of_view * M_PI / 360.0);
         double width = height * aspect;
 
