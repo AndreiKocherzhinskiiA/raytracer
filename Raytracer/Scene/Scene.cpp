@@ -40,7 +40,7 @@ namespace RayTracer {
 
                     hittable_list.add(
                         ObjectFactory::createSphere(
-                            Point3D(x, y, z),
+                            Math::Point3D(x, y, z),
                             r,
                             Color(cr, cg, cb)
                         )

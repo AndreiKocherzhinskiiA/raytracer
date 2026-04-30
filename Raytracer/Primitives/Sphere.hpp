@@ -5,7 +5,6 @@
 #include "../Core/IMaterial.hpp"
 #include "../Core/HitObject.hpp"
 #include "../Core/Color.hpp"
-#include "../math/MathCalculations.hpp"
 
 namespace RayTracer {
     class Sphere : public IObject
@@ -15,32 +14,40 @@ namespace RayTracer {
         double radius;
         std::shared_ptr<IMaterial> material;
         Color color = {0 ,0 ,0};
+
     public:
-        Sphere(Math::Point3D center, double radius, std::shared_ptr<IMaterial> material, Color color): center(center), radius(radius), material(material), color(color) {};
+        Sphere(Math::Point3D &center, double radius, 
+            Color &color): center(center), radius(radius), color(color) {};
         //NEED TO FIX TO WORK WITH THE NEW PROTOTYPE;
         // ray = incoming ray;
         // discriminant must be between tMax and TMin return false if not
         // obj = if you it fill with info
-        bool hit(const Ray& ray, double tMax, double tMin, HitObject &obj)const override {
-            Math::Vector3D pointToCircleCenter = center - ray.origin;
+        bool hit(const Ray& ray, HitObject &obj, double tMax, double tMin) const override 
+        {
+            Math::Vector3D oc = ray.origin - center;
+
             auto a = ray.direction.lengthSquared();
-            auto h = ray.direction.dot(pointToCircleCenter);
-            auto c = pointToCircleCenter.lengthSquared() - radius * radius;
+            auto h = ray.direction.dot(oc);
+            auto c = oc.lengthSquared() - radius * radius;
+
             auto discriminant = h * h - a * c;
-            if (discriminant < 0) {
+            if (discriminant < 0)
                 return false;
-            }
-            double t = (-h - std::sqrt(discriminant)) / a;
+
+            double sqrtD = (std::sqrt(discriminant));
+
+            auto t = (-h - sqrtD) / a;
             if (t < tMin || t > tMax) {
-                t = (-h + std::sqrt(discriminant)) / a; // other root
+                t = (-h + sqrtD) / a; // other root
                 if (t < tMin || t > tMax) {
                     return false;
                 }
             }
             obj.t = t;
             obj.point = ray.at(t);
-            obj.normal = (obj.point - center) / radius;
-            obj.material = material;
+            obj.normal = ((obj.point - center) / radius).normalize();
+            obj.material = nullptr;
+
             return true;
         }
         ~Sphere() = default;
@@ -53,3 +60,4 @@ namespace RayTracer {
 // auto c = dot(oc, oc) - radius*radius;
 // auto discriminant = b*b - 4*a*c;
 // return (discriminant >= 0);
+//std::shared_ptr<IMaterial> material, 

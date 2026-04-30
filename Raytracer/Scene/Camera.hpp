@@ -2,8 +2,6 @@
 
 #include "../math/Ray.hpp"
 #include "Rectangle3D.hpp"
-#include <cmath>
-#include <libconfig.h++>
 #include <string>
 #include <iostream>
 
@@ -19,22 +17,13 @@ public:
     Rectangle3D screen;
 
     Camera() = default;
-    Camera(const std::string& file_path) {
-        libconfig::Config cfg;
-        cfg.readFile(file_path);
 
-        cfg.lookupValue("camera.resolution.width", image_width);
-        cfg.lookupValue("camera.resolution.height", image_height);
-
-        cfg.lookupValue("camera.position.x", origin.x);
-        cfg.lookupValue("camera.position.y", origin.y);
-        cfg.lookupValue("camera.position.z", origin.z);
-
-        cfg.lookupValue("camera.rotation.x", rotation.x);
-        cfg.lookupValue("camera.rotation.y", rotation.y);
-        cfg.lookupValue("camera.rotation.z", rotation.z);
-
-        cfg.lookupValue("camera.fieldOfView", field_of_view);
+    Camera(int width, int height, const Math::Point3D &origin, float fov)
+    {
+        this->image_width = width;
+        this->image_height = height;
+        this->origin = origin;
+        this->field_of_view= fov;
         makeScreen();
     }
     // //Camera(const std::string& file_path) 
