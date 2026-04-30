@@ -19,7 +19,7 @@ namespace RayTracer {
 
     public:
         Scene();
-        bool init(const std::string path);
+        bool init(const std::string &path);
         ~Scene() = default;
 };
 
