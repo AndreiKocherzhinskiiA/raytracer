@@ -5,6 +5,8 @@
 #include "../Core/IMaterial.hpp"
 #include "../Core/HitObject.hpp"
 #include "../Core/Color.hpp"
+#include "../Materials/NoMaterial.hpp"
+#include <iostream>
 
 namespace RayTracer {
     class Sphere : public IObject
@@ -17,19 +19,20 @@ namespace RayTracer {
 
     public:
         Sphere(const Math::Point3D &center, double radius, 
-            const Color &color): center(center), radius(radius), color(color) {};
+            const Color &color): center(center), radius(radius), color(color) {
+                material = std::make_shared<NoMaterial>(color);
+            }
         //NEED TO FIX TO WORK WITH THE NEW PROTOTYPE;
         // ray = incoming ray;
         // discriminant must be between tMax and TMin return false if not
         // obj = if you it fill with info
-        bool hit(const Ray& ray, HitObject &obj, double tMax, double tMin) const override 
+        bool hit(const Ray& ray, HitObject &obj, double tMin,  double tMax) const override 
         {
             Math::Vector3D oc = ray.origin - center;
-
             auto a = ray.direction.lengthSquared();
             auto h = ray.direction.dot(oc);
             auto c = oc.lengthSquared() - radius * radius;
-
+            
             auto discriminant = h * h - a * c;
             if (discriminant < 0)
                 return false;
@@ -43,10 +46,11 @@ namespace RayTracer {
                     return false;
                 }
             }
+            // std::cout << "hit" << std::endl;
             obj.t = t;
             obj.point = ray.at(t);
             obj.normal = ((obj.point - center) / radius).normalize();
-            obj.material = nullptr;
+            obj.material = material;
 
             return true;
         }

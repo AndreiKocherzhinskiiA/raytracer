@@ -7,11 +7,12 @@ namespace RayTracer {
         auto g = pixel_color.g;
         auto b = pixel_color.b;
         // std::clog << "r=" << r << " g=" << g << " b=" << b << std::endl;
-        int rbyte = int(255.999 * r);
-        int gbyte = int(255.999 * g);
-        int bbyte = int(255.999 * b);
+        int rbyte = int(1 * r); //255.999
+        int gbyte = int(1 * g);
+        int bbyte = int(1 * b);
         out << rbyte << ' ' << gbyte << ' ' << bbyte << '\n';
     };
+
 
     Color Renderer::render(const Ray &ray, int depth) {
         if (depth >= max_depth)
@@ -19,7 +20,7 @@ namespace RayTracer {
 
         HitObject obj;
         if (!scene.hittable_list.hit(ray, obj, epsilon, infinity)) {
-            return {0, 0, 0}; //sky color
+            return {1, 1, 1};; //sky color
         }
         Color color;
         // scene.lights.light(obj, color, scene);
@@ -29,9 +30,11 @@ namespace RayTracer {
         }
         return obj.material->color();
     };
+
+    
     void Renderer::render() {
         Color color;
-        std::cout << scene.cam.image_width << " " << scene.cam.image_height << "\n255\n";
+        std::cout << "P3\n" << scene.cam.image_width << " " << scene.cam.image_height << "\n255\n";
         for (int y = scene.cam.image_height - 1; y >= 0 ; y--) {
             for (int x = 0; x < scene.cam.image_width ; x++) {
                 Ray r = scene.cam.ray(x, y);

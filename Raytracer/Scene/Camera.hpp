@@ -26,41 +26,31 @@ public:
         this->field_of_view= fov;
         makeScreen();
     }
-    // //Camera(const std::string& file_path) 
-    // {
-    //     libconfig::Config cfg;
-    //     cfg.readFile(file_path);
 
-    //     cfg.lookupValue("camera.resolution.width", image_width);
-    //     cfg.lookupValue("camera.resolution.height", image_height);
-
-    //     cfg.lookupValue("camera.position.x", origin.x);
-    //     cfg.lookupValue("camera.position.y", origin.y);
-    //     cfg.lookupValue("camera.position.z", origin.z);
-
-    //     cfg.lookupValue("camera.rotation.x", rotation.x);
-    //     cfg.lookupValue("camera.rotation.y", rotation.y);
-    //     cfg.lookupValue("camera.rotation.z", rotation.z);
-
-    //     cfg.lookupValue("camera.fieldOfView", field_of_view);
-    //     makeScreen();
-    //     std::cout << "setup cam" << std::endl;
-    // }
     Camera(Math::Point3D origin, Rectangle3D screen)
         : origin(origin), screen(screen) {}
 
-    void makeScreen() {
-        //double aspect = image_height * 1 / image_width;
-        double aspect = (double)image_width / (double)image_height;
-        double height = 2 * tan(field_of_view * M_PI / 360.0);
-        double width = height * aspect;
+        void makeScreen() {
+            double aspect = (double)image_width / (double)image_height;
+            double theta = field_of_view * M_PI / 180.0;  // Degrees → radians
+            double height = 2 * tan(theta / 2.0);         // ← This line
+            double width = height * aspect;
+        
+            double focal = height / tan(theta / 2.0);     // Focal length
+        
+            screen.origin = {
+                origin.x - width / 2.0,
+                origin.y + height / 2.0,
+                origin.z - focal                          // ← Key fix
+            };
+            screen.bottom_side = {width, 0, 0};
+            screen.left_side = {0, -height, 0};
+        }
 
-        screen.origin = {origin.x - width / 2, origin.y + height / 2, origin.z - 1};
-        screen.bottom_side = {width, 0, 0};
-        screen.left_side = {0, -height, 0};
-    }
-
-    Ray ray(double u, double v) const {
+    Ray ray(int x, int y) const {
+        // std::cout << "[CAMERA DEBUG] screen.origin.z=" << screen.origin.z << std::endl;
+        double u = (x + 0.5) / image_width;
+        double v = (y + 0.5) / image_height;
         Math::Point3D pixel = screen.pointAt(u, v);
         Math::Vector3D direction = (pixel - origin).normalize();
         return Ray(origin, direction);

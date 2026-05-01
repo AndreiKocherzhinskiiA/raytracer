@@ -11,7 +11,7 @@ namespace RayTracer {
         /* data */
     public:
         virtual bool scatter(const Ray& rayIn, const HitObject& rec, Color& color, Ray& scattered) const = 0;
-        virtual Color color() const;
+        virtual const Color &color() const = 0;
         ~IMaterial() = default;
     };
 }

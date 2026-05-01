@@ -8,9 +8,9 @@ namespace RayTracer {
         {
             int width = 0;
             int height = 0;
-            double x = 0;
-            double y = 0;
-            double z = 0;
+            int x = 0;
+            int y = 0;
+            int z = 0;
             double fov = 0;
 
             camera["resolution"].lookupValue("width", width);
@@ -23,6 +23,8 @@ namespace RayTracer {
             cam = Camera(width, height, origin, fov);
             //cam = Camera(width, height, Point3D(x, y, z), fov);
         };
+
+        
         void Scene::loadObjects(const libconfig::Setting &primitives) {
             if (!primitives.exists("spheres")) {
                 return;
@@ -30,10 +32,10 @@ namespace RayTracer {
             const auto &spheres = primitives["spheres"];
             for (int i = 0; i < spheres.getLength(); i++) {
                 const auto &s = spheres[i];
-                double x = 0;
-                double y = 0;
-                double z = 0;
-                double r = 0;
+                int x = 0;
+                int y = 0;
+                int z = 0;
+                int r = 0;
                 s.lookupValue("x", x);
                 s.lookupValue("y", y);
                 s.lookupValue("z", z);
