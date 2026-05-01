@@ -7,7 +7,8 @@ NAME      = raytracer
 SRCS      = Raytracer/main.cpp \
             Raytracer/math/MathCalculations.cpp \
             Raytracer/Core/Renderer.cpp \
-            Raytracer/Scene/Scene.cpp
+            Raytracer/Scene/Scene.cpp \
+			Raytracer/Scene/ObjectFactory.cpp
 OBJS      = $(SRCS:.cpp=.o)
 
 all: $(NAME)

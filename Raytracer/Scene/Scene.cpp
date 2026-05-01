@@ -6,48 +6,53 @@ namespace RayTracer {
         };
         void Scene::loadCam(const libconfig::Setting &camera) 
         {
-            const auto &res = camera["resolution"];
-            int width = res["width"];
-            int height = res["height"];
+            int width = 0;
+            int height = 0;
+            double x = 0;
+            double y = 0;
+            double z = 0;
+            double fov = 0;
 
-            const auto &pos = camera["position"];
-            double x = pos["x"];
-            double y = pos["y"];
-            double z = pos["z"];
-
-            double fov = camera["fieldofView"];
-
+            camera["resolution"].lookupValue("width", width);
+            camera["resolution"].lookupValue("height", height);
+            camera["position"].lookupValue("x", x);
+            camera["position"].lookupValue("y", y);
+            camera["position"].lookupValue("z", z);
+            camera.lookupValue("fieldOfView", fov);
             Math::Point3D origin(x, y, z);
             cam = Camera(width, height, origin, fov);
             //cam = Camera(width, height, Point3D(x, y, z), fov);
         };
         void Scene::loadObjects(const libconfig::Setting &primitives) {
-            if (primitives.exists("spheres")) {
-                const auto &spheres = primitives["spheres"];
-
-                for (int i = 0; i < spheres.getLength(); i++) {
-                    const auto &s = spheres[i];
-
-                    double x = s["x"];
-                    double y = s["y"];
-                    double z = s["z"];
-                    double r = s["r"];
-
-                    const auto &color = s["color"];
-                    int cr = color["r"];
-                    int cg = color["g"];
-                    int cb = color["b"];
-
-                    hittable_list.add(
-                        ObjectFactory::createSphere(
-                            Math::Point3D(x, y, z),
-                            r,
-                            Color(cr, cg, cb)
-                        )
-                    );
-                }
+            if (!primitives.exists("spheres")) {
+                return;
             }
-           
+            const auto &spheres = primitives["spheres"];
+            for (int i = 0; i < spheres.getLength(); i++) {
+                const auto &s = spheres[i];
+                double x = 0;
+                double y = 0;
+                double z = 0;
+                double r = 0;
+                s.lookupValue("x", x);
+                s.lookupValue("y", y);
+                s.lookupValue("z", z);
+                s.lookupValue("r", r);
+                const auto &color = s["color"];
+                int cr = 0;
+                int cg = 0;
+                int cb = 0;
+                color.lookupValue("r", cr);
+                color.lookupValue("g", cg);
+                color.lookupValue("b", cb);
+                hittable_list.add(
+                    ObjectFactory::createSphere(
+                        Math::Point3D(x, y, z),
+                        r,
+                        Color(cr, cg, cb)
+                    )
+                );
+            }
         };
         bool Scene::init(const std::string &path) {
             libconfig::Config cfg;
@@ -68,7 +73,7 @@ namespace RayTracer {
 
             loadCam(root["camera"]);
             loadObjects(root["primitives"]);
-            loadLights(root["lights"]);
+            // loadLights(root["lights"]);
             return true;
         };
 }

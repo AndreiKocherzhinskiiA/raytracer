@@ -22,7 +22,7 @@ namespace RayTracer {
             return {0, 0, 0}; //sky color
         }
         Color color;
-        scene.lights.light(obj, color, scene);
+        // scene.lights.light(obj, color, scene);
         Ray scatter;
         if (obj.material->scatter(ray, obj, color, scatter)) {
             return color * render(scatter, depth + 1);

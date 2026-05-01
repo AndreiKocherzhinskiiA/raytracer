@@ -16,8 +16,8 @@ namespace RayTracer {
         Color color = {0 ,0 ,0};
 
     public:
-        Sphere(Math::Point3D &center, double radius, 
-            Color &color): center(center), radius(radius), color(color) {};
+        Sphere(const Math::Point3D &center, double radius, 
+            const Color &color): center(center), radius(radius), color(color) {};
         //NEED TO FIX TO WORK WITH THE NEW PROTOTYPE;
         // ray = incoming ray;
         // discriminant must be between tMax and TMin return false if not
