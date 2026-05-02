@@ -29,6 +29,13 @@ namespace Math
             if (len == 0.0) return *this;
             return *this / len;
         }
+        Math::Vector3D cross(const Math::Vector3D& other) const {
+            return {
+                y * other.z - z * other.y,
+                z * other.x - x * other.z,
+                x * other.y - y * other.x
+            };
+        }
 
         Vector3D operator+(const Vector3D &other) const{
             Vector3D newV;
@@ -69,7 +76,7 @@ namespace Math
             return *this;
         }
 
-        Vector3D operator-=(const Vector3D &other) {
+        Vector3D &operator-=(const Vector3D &other) {
             x -= other.x;
             y -= other.y;
             z -= other.z;
@@ -84,9 +91,9 @@ namespace Math
         }
 
         Vector3D operator/=(const Vector3D &other) {
-            x += other.x;
-            y += other.y;
-            z += other.z;
+            x /= other.x;
+            y /= other.y;
+            z /= other.z;
             return *this;
         }
 
@@ -115,9 +122,9 @@ namespace Math
         }
 
         Vector3D operator/=(double d) {
-            x += d;
-            y += d;
-            z += d;
+            x /= d;
+            y /= d;
+            z /= d;
             return *this;
         }
 

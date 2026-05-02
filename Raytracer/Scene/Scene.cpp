@@ -4,7 +4,7 @@ namespace RayTracer {
         Scene::Scene() {
 
         };
-        void Scene::loadCam(const libconfig::Setting &camera) 
+        void Scene::loadCam(const libconfig::Setting &camera)
         {
             int width = 0;
             int height = 0;
