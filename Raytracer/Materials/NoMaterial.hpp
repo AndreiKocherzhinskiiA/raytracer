@@ -16,7 +16,7 @@ namespace RayTracer {
             (void)color;
             (void)scattered;
             color = _color;
-            return true;}
+            return false;}
         const Color &color() const {
             return _color;
         }
