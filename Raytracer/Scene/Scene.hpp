@@ -7,6 +7,7 @@
 #include <libconfig.h++>
 #include "../Lights/Directional.hpp"
 #include "../Lights/Point.hpp"
+#include "../Primitives/Plane.hpp"
 
 
 namespace RayTracer {

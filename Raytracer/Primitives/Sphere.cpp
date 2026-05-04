@@ -6,7 +6,7 @@ namespace RayTracer {
     Sphere::Sphere(const Math::Point3D &center, double radius, const Color &color)
         : center(center), radius(radius), color(color)
     {
-        material = std::make_shared<NoMaterial>(color);
+        material = std::make_shared<FlatColor>(color);
     }
 
     bool Sphere::hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const

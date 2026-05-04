@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include "../Core/HittableList.hpp"
 #include "../Primitives/Sphere.hpp"
+#include "../Primitives/Plane.hpp"
 
 // #include 
 
@@ -21,6 +22,11 @@ public:
     static std::shared_ptr<IObject> createSphere(
         const Math::Point3D &center,
         double radius,
+        const Color &color
+    );
+    static std::shared_ptr<IObject> createPlane(
+        Axis axis,
+        double position,
         const Color &color
     );
 };

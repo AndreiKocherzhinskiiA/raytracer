@@ -59,6 +59,37 @@ namespace RayTracer {
                 )
             );
         }
+
+        if (primitives.exists("planes")) {
+            const auto &planes = primitives["planes"];
+            for (int i = 0; i < planes.getLength(); i++) {
+                const auto &p = planes[i];
+
+                std::string axisStr = "Y";
+                int position = 0;
+                int cr = 255, cg = 255, cb = 255;
+
+                p.lookupValue("axis", axisStr);
+                p.lookupValue("position", position);
+
+                const auto &color = p["color"];
+                color.lookupValue("r", cr);
+                color.lookupValue("g", cg);
+                color.lookupValue("b", cb);
+
+                Axis axis = Axis::Y;
+                if (axisStr == "X") axis = Axis::X;
+                else if (axisStr == "Z") axis = Axis::Z;
+
+                hittable_list.add(
+                    ObjectFactory::createPlane(
+                        axis,
+                        position,
+                        Color(cr / 255.0, cg / 255.0, cb / 255.0)
+                    )
+                );
+            }
+        }
     };
     void Scene::loadLights(const libconfig::Setting &lights)
     {

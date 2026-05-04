@@ -5,7 +5,7 @@
 #include "../Core/IMaterial.hpp"
 #include "../Core/HitObject.hpp"
 #include "../Core/Color.hpp"
-#include "../Materials/NoMaterial.hpp"
+#include "../Materials/FlatColor.hpp"
 #include <iostream>
 
 namespace RayTracer {
