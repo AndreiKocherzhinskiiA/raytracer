@@ -29,6 +29,10 @@ namespace Math
             if (len == 0.0) return *this;
             return *this / len;
         }
+
+        Vector3D operator-() const {
+            return Vector3D(-x, -y, -z);
+        }
         Math::Vector3D cross(const Math::Vector3D& other) const {
             return {
                 y * other.z - z * other.y,

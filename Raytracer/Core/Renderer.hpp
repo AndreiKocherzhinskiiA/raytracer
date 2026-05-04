@@ -3,15 +3,15 @@
 #include "../Scene/Camera.hpp"
 #include "../Scene/Scene.hpp"
 #include "../Core/HittableList.hpp"
+#include "../Core/HitObject.hpp"
 #include "../Core/IObject.hpp"
 #include "../Core/ILight.hpp"
+#include "Constants.hpp"
 
 #include "iostream"
-#include <limits>
+// #include <limits>
 
 namespace RayTracer {
-    inline constexpr double epsilon = 1e-8;
-    inline constexpr double infinity = std::numeric_limits<double>::infinity();
     class Renderer
     {
     private:

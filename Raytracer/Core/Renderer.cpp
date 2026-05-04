@@ -1,4 +1,7 @@
 #include "Renderer.hpp"
+#include "../Core/HitObject.hpp"
+#include <algorithm>
+
 namespace RayTracer {
     Renderer::Renderer(const Scene &scene) : scene(scene) {};
 
@@ -7,6 +10,15 @@ namespace RayTracer {
         auto g = pixel_color.g;
         auto b = pixel_color.b;
         // std::clog << "r=" << r << " g=" << g << " b=" << b << std::endl;
+
+        r = std::clamp(r, 0.0, 1.0);
+        g = std::clamp(g, 0.0, 1.0);
+        b = std::clamp(b, 0.0, 1.0);
+        //helps with brightness
+        r = std::pow(r, 1.0 / 2.2);
+        g = std::pow(g, 1.0 / 2.2);
+        b = std::pow(b, 1.0 / 2.2);
+
         int rbyte = int(255.999 * r);
         int gbyte = int(255.999 * g);
         int bbyte = int(255.999 * b);
@@ -23,12 +35,13 @@ namespace RayTracer {
             return {1, 1, 1};; //sky color
         }
         Color color;
-        // scene.lights.light(obj, color, scene);
-        Ray scatter;
-        if (obj.material->scatter(ray, obj, color, scatter)) {
-            return color * render(scatter, depth + 1);
-        }
-        return obj.material->color();
+        scene.scene_lights.light(obj, color, scene);
+        // std::cerr << "after light: " << color.r << " " << color.g << " " << color.b << "\n";
+        // Ray scatter;
+        // // if (obj.material->scatter(ray, obj, color, scatter)) {
+        // //     return color * render(scatter, depth + 1);
+        // // }
+        return color;
     };
 
     

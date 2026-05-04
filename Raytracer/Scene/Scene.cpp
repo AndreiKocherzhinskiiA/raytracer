@@ -31,8 +31,8 @@ namespace RayTracer {
     };
 
     void Scene::loadObjects(const libconfig::Setting &primitives) {
-        if (!primitives.exists("spheres"))
-            return;
+        // if (!primitives.exists("spheres"))
+        //     return;
         const auto &spheres = primitives["spheres"];
         for (int i = 0; i < spheres.getLength(); i++) {
             const auto &s = spheres[i];
@@ -60,6 +60,53 @@ namespace RayTracer {
             );
         }
     };
+    void Scene::loadLights(const libconfig::Setting &lights)
+    {
+        lights.lookupValue("ambient", ambient);
+        lights.lookupValue("diffuse", diffuse);
+
+        if (lights.exists("point")) {
+            const auto &points = lights["point"];
+            for (int i = 0; i < points.getLength(); i++) {
+                const auto &p = points[i];
+                int x = 0;
+                int y = 0;
+                int z = 0;
+
+                p.lookupValue("x", x);
+                p.lookupValue("y", y);
+                p.lookupValue("z", z);
+
+                scene_lights.add(
+                    std::make_unique<PointLight>(
+                        Math::Point3D(x, y, z),
+                        Color(1, 1, 1)
+                    )
+                );
+            }
+        }
+
+        if (lights.exists("directional")) {
+            const auto &directionals = lights["directional"];
+            for (int i = 0; i < directionals.getLength(); i++) {
+                const auto &d = directionals[i];
+                int x = 0;
+                int y = 0;
+                int z = 0;
+
+                d.lookupValue("x", x);
+                d.lookupValue("y", y);
+                d.lookupValue("z", z);
+
+                scene_lights.add(
+                    std::make_unique<Directional>(
+                        Math::Vector3D(x, y, z),
+                        Color(1, 1, 1)
+                    )
+                );
+            }
+        }
+    }
 
     bool Scene::init(const std::string &path) {
         libconfig::Config cfg;
@@ -79,6 +126,8 @@ namespace RayTracer {
         const libconfig::Setting &root = cfg.getRoot();
         loadCam(root["camera"]);
         loadObjects(root["primitives"]);
+        if (root.exists("lights"))
+            loadLights(root["lights"]);
         return true;
     };
 }

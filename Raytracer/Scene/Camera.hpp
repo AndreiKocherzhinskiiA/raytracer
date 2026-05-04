@@ -48,11 +48,11 @@ public:
 
         Math::Vector3D right, up;
         if (std::abs(fwd.dot(worldUp)) > 0.999) {
-            right = worldForward.cross(fwd).normalize();
+            right = worldUp.cross(worldForward).normalize();
         } else {
-            right = fwd.cross(worldUp).normalize();
+            right = worldUp.cross(fwd).normalize();
         }
-        up = right.cross(fwd).normalize();
+        up = fwd.cross(right).normalize();
 
         if (roll != 0.0) {
             double cr = std::cos(roll);
@@ -73,7 +73,7 @@ public:
     Ray ray(int x, int y) const
     {
         double u = (x + 0.5) / image_width;
-        double v = (y + 0.5) / image_height;
+        double v = 1.0 - (y + 0.5) / image_height;
 
         Math::Point3D pixel = screen.pointAt(u, v);
         Math::Vector3D direction = (pixel - origin).normalize();

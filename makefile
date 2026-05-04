@@ -1,15 +1,20 @@
-CXX       = g++
-CXXFLAGS  = -std=c++17 -Wall -Wextra -I. -lconfig++
-LDFLAGS   = -lconfig++
+CXX      = g++
+CXXFLAGS = -std=c++17 -Wall -Wextra -I.
+LDFLAGS  = -lconfig++
 
-NAME      = raytracer
+NAME     = raytracer
 
-SRCS      = Raytracer/main.cpp \
-            Raytracer/math/MathCalculations.cpp \
-            Raytracer/Core/Renderer.cpp \
-            Raytracer/Scene/Scene.cpp \
-			Raytracer/Scene/ObjectFactory.cpp
-OBJS      = $(SRCS:.cpp=.o)
+SRCS     = Raytracer/main.cpp \
+           Raytracer/math/MathCalculations.cpp \
+           Raytracer/Core/Renderer.cpp \
+           Raytracer/Core/Lights.cpp \
+           Raytracer/Scene/Scene.cpp \
+           Raytracer/Scene/ObjectFactory.cpp \
+           Raytracer/Lights/Directional.cpp \
+           Raytracer/Lights/Point.cpp \
+           Raytracer/Primitives/Sphere.cpp
+
+OBJS     = $(SRCS:.cpp=.o)
 
 all: $(NAME)
 
