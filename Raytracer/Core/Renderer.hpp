@@ -8,9 +8,13 @@
 #include "../Core/ILight.hpp"
 #include "Constants.hpp"
 #include <vector>
+#include <thread>
+#include <mutex>
+#include <atomic>
 
 #include "iostream"
-// #include <limits>
+// #include <limits>'
+
 
 namespace RayTracer {
     class Renderer
@@ -19,8 +23,15 @@ namespace RayTracer {
         void writeColor(std::ostream& out, const Color& pixel_color);
         const Scene &scene;
         int max_depth = 3;
-
+        void setUpThreads(int num_of_threads);
+        std::vector<Color> print_Buffer;
+        std::atomic<int> row = 0;
+        void renderRow(int y);
+        const int number_of_threads = 8;
+        const int samples = 100;
+        const int chunkSize = 128;
     public:
+        void render_thread();
         ~Renderer() = default;
         Renderer(const Scene &scene);
         void render();

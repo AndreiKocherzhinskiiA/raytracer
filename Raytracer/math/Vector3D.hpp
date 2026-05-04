@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <random>
 
 namespace Math
 {
@@ -29,9 +30,11 @@ namespace Math
             if (len == 0.0) return *this;
             return *this / len;
         }
-        static double randomDouble(double min, double max)
-        {
-            return min + (max - min) * (double(rand()) / double(RAND_MAX));
+        static double randomDouble(double min, double max) {
+            // give each thread its own random number, does not block all threads
+            thread_local std::mt19937 rng(std::random_device{}());
+            thread_local std::uniform_real_distribution<double> dist(0.0, 1.0);
+            return min + (max - min) * dist(rng);
         }
         static Math::Vector3D randomUnitVector()
         {

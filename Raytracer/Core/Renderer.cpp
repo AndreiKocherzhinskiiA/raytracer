@@ -46,39 +46,48 @@ namespace RayTracer {
         return direct;
     };
 
-    
-    void Renderer::render() {
-        Color pxl_color;
-        int samples = 100;
-        std::cout << "P3\n" << scene.cam.image_width << " " << scene.cam.image_height << "\n255\n";
-        std::vector<Color> print_Buffer(scene.cam.image_width * scene.cam.image_height);
-        for (int y = scene.cam.image_height - 1; y >= 0 ; y--) {
-            for (int x = 0; x < scene.cam.image_width ; x++) {
-                for (int i = 0; i < samples; i++) {
-                    Ray r = scene.cam.ray(x, y);
-                    pxl_color = pxl_color + render(r, 0);
+    void Renderer::render_thread() {
+        std::vector<std::pair<int, Color>> localResults;
+        localResults.reserve((scene.cam.image_width * scene.cam.image_height) / number_of_threads + scene.cam.image_width * chunkSize);
+
+        while (true) {
+            int startY = row.fetch_add(chunkSize);
+            if (startY >= scene.cam.image_height) break;
+            int endY = std::min(startY + chunkSize, scene.cam.image_height);
+
+            for (int y = startY; y < endY; ++y) {
+                for (int x = 0; x < scene.cam.image_width; x++) {
+                    Color pxl_color{0, 0, 0};
+                    for (int i = 0; i < samples; i++) {
+                        Ray r = scene.cam.ray(x, y);
+                        pxl_color = pxl_color + render(r, 0);
+                    }
+                    pxl_color = pxl_color / samples;
+                    int idx = x + (scene.cam.image_height - 1 - y) * scene.cam.image_width;
+                    //helps with the speed of writes to buffer
+                    localResults.emplace_back(idx, pxl_color);
                 }
-                pxl_color = pxl_color / samples;
-                print_Buffer[x + (scene.cam.image_height - 1 - y) * scene.cam.image_width] = pxl_color;
             }
         }
+        for (auto& [idx, color] : localResults)
+            print_Buffer[idx] = color;
+    }
+
+    void Renderer::setUpThreads(int num_of_threads) {
+        std::vector<std::thread> threads;
+        for (int i = 0; i < num_of_threads; i++) {
+            threads.emplace_back(&Renderer::render_thread, this);
+        }
+        for (auto& t : threads) {
+            t.join();
+        }
+    }
+
+    void Renderer::render() {
+        std::cout << "P3\n" << scene.cam.image_width << " " << scene.cam.image_height << "\n255\n";
+        print_Buffer.resize(scene.cam.image_width * scene.cam.image_height);
+        setUpThreads(number_of_threads);
         for(const auto &pxl : print_Buffer)
             writeColor(std::cout, pxl);
     };
 }
-
-// std::cout << cam.image_width << " " << cam.image_height << "\n255\n";
-// HitObject hit_x;
-// for (int y = cam.image_height - 1; y >= 0 ; y--) {
-//     for (int x = 0; x < cam.image_width ; x++) {
-//         Color pixel(0, 0, 0);
-//         Ray r = cam.ray(x, y);
-//         if (scene.hit(r, 0.001, INFINITY, hit_x)) {
-//             Math::Vector3D n = (hit_x.normal + Math::Vector3D(1, 1, 1)) * 0.5;
-//             Color pixel(n.x, n.y, n.z);
-//             writeColor(std::cout, pixel);
-//         } else {
-//             writeColor(std::cout, pixel);
-//         }
-//     }
-// }
