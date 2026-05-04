@@ -29,6 +29,25 @@ namespace Math
             if (len == 0.0) return *this;
             return *this / len;
         }
+        static double randomDouble(double min, double max)
+        {
+            return min + (max - min) * (double(rand()) / double(RAND_MAX));
+        }
+        static Math::Vector3D randomUnitVector()
+        {
+            while (true) {
+                Math::Vector3D p(
+                    randomDouble(-1.0, 1.0),
+                    randomDouble(-1.0, 1.0),
+                    randomDouble(-1.0, 1.0)
+                );
+
+                double len2 = p.x * p.x + p.y * p.y + p.z * p.z;
+
+                if (len2 > 1e-8 && len2 <= 1.0)
+                    return p / std::sqrt(len2);
+            }
+        }
 
         Vector3D operator-() const {
             return Vector3D(-x, -y, -z);

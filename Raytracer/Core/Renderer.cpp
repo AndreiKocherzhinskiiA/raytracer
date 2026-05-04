@@ -15,9 +15,9 @@ namespace RayTracer {
         g = std::clamp(g, 0.0, 1.0);
         b = std::clamp(b, 0.0, 1.0);
         //helps with brightness
-        r = std::pow(r, 1.0 / 2.2);
-        g = std::pow(g, 1.0 / 2.2);
-        b = std::pow(b, 1.0 / 2.2);
+        // r = std::pow(r, 1.0 / 2.2);
+        // g = std::pow(g, 1.0 / 2.2);
+        // b = std::pow(b, 1.0 / 2.2);
 
         int rbyte = int(255.999 * r);
         int gbyte = int(255.999 * g);
@@ -34,25 +34,32 @@ namespace RayTracer {
         if (!scene.hittable_list.hit(ray, obj, epsilon, infinity)) {
             return {1, 1, 1};; //sky color
         }
-        Color color;
-        scene.scene_lights.light(obj, color, scene);
+        Color direct = {0, 0, 0};
+        scene.scene_lights.light(obj, direct, scene);
         // std::cerr << "after light: " << color.r << " " << color.g << " " << color.b << "\n";
-        // Ray scatter;
-        // // if (obj.material->scatter(ray, obj, color, scatter)) {
-        // //     return color * render(scatter, depth + 1);
-        // // }
-        return color;
+        Ray scatter;
+        Color attenuation;
+        if (obj.material->scatter(ray, obj, attenuation, scatter)) {
+            Color indirect = attenuation * render(scatter, depth + 1);
+            return direct + indirect;
+        }
+        return direct;
     };
 
     
     void Renderer::render() {
-        Color color;
+        Color pxl_color;
+        int samples = 100;
         std::cout << "P3\n" << scene.cam.image_width << " " << scene.cam.image_height << "\n255\n";
         for (int y = scene.cam.image_height - 1; y >= 0 ; y--) {
             for (int x = 0; x < scene.cam.image_width ; x++) {
-                Ray r = scene.cam.ray(x, y);
-                color = render(r, 0);
-                writeColor(std::cout, color);
+                for (int i = 0; i < samples; i++) {
+                    Ray r = scene.cam.ray(x, y);
+                    pxl_color = pxl_color + render(r, 0);
+
+                }
+                pxl_color = pxl_color / samples;
+                writeColor(std::cout, pxl_color);
             }
         }
     };

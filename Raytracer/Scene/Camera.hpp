@@ -72,8 +72,8 @@ public:
 
     Ray ray(int x, int y) const
     {
-        double u = (x + 0.5) / image_width;
-        double v =(y + 0.5) / image_height;
+        double u = (x + Math::Vector3D::randomDouble(0.0, 1.0)) / image_width;
+        double v = (y + Math::Vector3D::randomDouble(0.0, 1.0)) / image_height;
         Math::Point3D pixel = screen.pointAt(u, v);
         Math::Vector3D direction = (pixel - origin).normalize();
 

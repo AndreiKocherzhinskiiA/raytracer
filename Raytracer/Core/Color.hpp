@@ -12,6 +12,9 @@ public:
     Color operator+(const Color& other) const {
         return Color(r + other.r, g + other.g, b + other.b);
     }
+    Color operator/(int x) const {
+        return Color(r / x , g / x, b / x);
+    }
     Color operator*(double t) const {
         return Color(r * t, g * t, b * t);
     }

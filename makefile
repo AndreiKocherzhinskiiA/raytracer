@@ -13,7 +13,8 @@ SRCS     = Raytracer/main.cpp \
            Raytracer/Lights/Directional.cpp \
            Raytracer/Lights/Point.cpp \
            Raytracer/Primitives/Sphere.cpp  \
-           Raytracer/Primitives/Plane.cpp
+           Raytracer/Primitives/Plane.cpp   \
+           Raytracer/Materials/FlatColor.cpp
 
 OBJS     = $(SRCS:.cpp=.o)
 
