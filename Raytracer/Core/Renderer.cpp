@@ -51,17 +51,19 @@ namespace RayTracer {
         Color pxl_color;
         int samples = 100;
         std::cout << "P3\n" << scene.cam.image_width << " " << scene.cam.image_height << "\n255\n";
+        std::vector<Color> print_Buffer(scene.cam.image_width * scene.cam.image_height);
         for (int y = scene.cam.image_height - 1; y >= 0 ; y--) {
             for (int x = 0; x < scene.cam.image_width ; x++) {
                 for (int i = 0; i < samples; i++) {
                     Ray r = scene.cam.ray(x, y);
                     pxl_color = pxl_color + render(r, 0);
-
                 }
                 pxl_color = pxl_color / samples;
-                writeColor(std::cout, pxl_color);
+                print_Buffer[x + (scene.cam.image_height - 1 - y) * scene.cam.image_width] = pxl_color;
             }
         }
+        for(const auto &pxl : print_Buffer)
+            writeColor(std::cout, pxl);
     };
 }
 

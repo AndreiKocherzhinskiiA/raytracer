@@ -7,6 +7,7 @@
 #include "../Core/IObject.hpp"
 #include "../Core/ILight.hpp"
 #include "Constants.hpp"
+#include <vector>
 
 #include "iostream"
 // #include <limits>
@@ -18,6 +19,7 @@ namespace RayTracer {
         void writeColor(std::ostream& out, const Color& pixel_color);
         const Scene &scene;
         int max_depth = 3;
+
     public:
         ~Renderer() = default;
         Renderer(const Scene &scene);
