@@ -21,9 +21,16 @@ namespace RayTracer {
 
             Ray shadowRay(obj.point + obj.normal * epsilon, lightDir);
 
-            if (!scene.hittable_list.hit(shadowRay, rec, 1e-6, lightDist)) {
-                light->light(obj, color, scene);
+            HitObject rec;
+            bool blocked = false;
+            for (const auto& object : scene.objects) {
+                if (object->hit(shadowRay, rec, 1e-6, lightDist)) {
+                    blocked = true;
+                    break;
+                }
             }
+            if (!blocked)
+                light->light(obj, color, scene);
         }
     }
 }

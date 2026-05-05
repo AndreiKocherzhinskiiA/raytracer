@@ -2,7 +2,6 @@
 
 #include "../Scene/Camera.hpp"
 #include "../Scene/Scene.hpp"
-#include "../Core/HittableList.hpp"
 #include "../Core/HitObject.hpp"
 #include "../Core/IObject.hpp"
 #include "../Core/ILight.hpp"

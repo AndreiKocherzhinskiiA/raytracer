@@ -1,6 +1,5 @@
 #pragma once
 #include "Camera.hpp"
-#include "../Core/HittableList.hpp"
 #include "../Core/Lights.hpp"
 #include "ObjectFactory.hpp"
 #include <string>
@@ -20,7 +19,7 @@ namespace RayTracer {
 
     public:
         Camera cam;
-        HittableList hittable_list;
+        std::vector<std::shared_ptr<IObject>> objects;
         Lights scene_lights;
         double ambient = 0;
         double diffuse = 1;

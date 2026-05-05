@@ -6,7 +6,6 @@
 #include <iostream>
 #include <string>
 #include "Core/Color.hpp"
-#include "Core/HittableList.hpp"
 #include "Core/Renderer.hpp"
 
 
