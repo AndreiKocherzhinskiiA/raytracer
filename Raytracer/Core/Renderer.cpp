@@ -52,7 +52,8 @@ namespace RayTracer {
 
         while (true) {
             int startY = row.fetch_add(chunkSize);
-            if (startY >= scene.cam.image_height) break;
+            if (startY >= scene.cam.image_height)
+                break;
             int endY = std::min(startY + chunkSize, scene.cam.image_height);
 
             for (int y = startY; y < endY; ++y) {

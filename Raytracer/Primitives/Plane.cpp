@@ -35,8 +35,8 @@ namespace RayTracer {
         if (t < tMin || t > tMax)
             return false;
 
-        // // if (obj.normal.dot(ray.direction) > 0)
-        //     obj.normal = obj.normal * -1;
+        if (obj.normal.dot(ray.direction) > 0)
+            obj.normal = obj.normal * -1;
         obj.point = ray.origin + ray.direction * t;
         obj.t = t;
         obj.material = material;

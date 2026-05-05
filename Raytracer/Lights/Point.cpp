@@ -19,8 +19,8 @@ namespace RayTracer {
     void PointLight::light(const HitObject& obj, Color& color, const Scene& scene) const {
         Math::Vector3D lightDir = directionFrom(obj.point);
         double diff = std::max(0.0, obj.normal.dot(lightDir));
-        double dist = (_pos - obj.point).length();
-        double att = 1.0 / (1.0 + 0.005 * dist * dist);
-        color = color + (_color * diff * scene.diffuse * att);
+        // double dist = (_pos - obj.point).length();
+        // double att = 1.0 / (1.0 + 0.005 * dist * dist);
+        color = color + (_color * diff * scene.diffuse);
     }
 }

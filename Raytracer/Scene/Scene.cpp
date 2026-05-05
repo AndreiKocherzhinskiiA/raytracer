@@ -95,7 +95,8 @@ namespace RayTracer {
     {
         lights.lookupValue("ambient", ambient);
         lights.lookupValue("diffuse", diffuse);
-
+        // std::cout << ambient << std::endl;
+        // std::cout << diffuse << std::endl;
         if (lights.exists("point")) {
             const auto &points = lights["point"];
             for (int i = 0; i < points.getLength(); i++) {

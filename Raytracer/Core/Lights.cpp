@@ -21,7 +21,7 @@ namespace RayTracer {
 
             Ray shadowRay(obj.point + obj.normal * epsilon, lightDir);
 
-            if (!scene.hittable_list.hit(shadowRay, rec, epsilon, lightDist)) {
+            if (!scene.hittable_list.hit(shadowRay, rec, 1e-6, lightDist)) {
                 light->light(obj, color, scene);
             }
         }
