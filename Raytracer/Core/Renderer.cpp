@@ -29,14 +29,21 @@ namespace RayTracer {
     Color Renderer::render(const Ray &ray, int depth) {
         if (depth >= max_depth)
             return {0, 0, 0};
-
         HitObject obj;
-        if (!scene.hittable_list.hit(ray, obj, epsilon, infinity)) {
-            return {1, 1, 1};; //sky color
+        HitObject tempRec;
+        bool hitAnything = false;
+        double closest = infinity;
+        for (const auto& object : scene.objects) {
+            if (object->hit(ray, tempRec, epsilon, closest)) {
+                hitAnything = true;
+                closest = tempRec.t;
+                obj = tempRec;
+            }
         }
+        if (!hitAnything)
+            return {1, 1, 1}; // sky color
         Color direct = {0, 0, 0};
         scene.scene_lights.light(obj, direct, scene);
-        // std::cerr << "after light: " << color.r << " " << color.g << " " << color.b << "\n";
         Ray scatter;
         Color attenuation;
         if (obj.material->scatter(ray, obj, attenuation, scatter)) {
@@ -44,7 +51,7 @@ namespace RayTracer {
             return direct + indirect;
         }
         return direct;
-    };
+    }
 
     void Renderer::render_thread() {
         std::vector<std::pair<int, Color>> localResults;

@@ -51,7 +51,7 @@ namespace RayTracer {
             color.lookupValue("r", cr);
             color.lookupValue("g", cg);
             color.lookupValue("b", cb);
-            hittable_list.add(
+            objects.push_back(
                 ObjectFactory::createSphere(
                     Math::Point3D(x, y, z),
                     r,
@@ -81,7 +81,7 @@ namespace RayTracer {
                 if (axisStr == "X") axis = Axis::X;
                 else if (axisStr == "Z") axis = Axis::Z;
 
-                hittable_list.add(
+                objects.push_back(
                     ObjectFactory::createPlane(
                         axis,
                         position,

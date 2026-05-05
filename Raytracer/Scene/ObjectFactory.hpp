@@ -4,7 +4,6 @@
 #include <functional>
 #include <string>
 #include <unordered_map>
-#include "../Core/HittableList.hpp"
 #include "../Primitives/Sphere.hpp"
 #include "../Primitives/Plane.hpp"
 
