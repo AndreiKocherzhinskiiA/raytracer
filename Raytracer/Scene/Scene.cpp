@@ -90,6 +90,41 @@ namespace RayTracer {
                 );
             }
         }
+
+        if (primitives.exists("cylinders")) {
+            const auto &cylinders = primitives["cylinders"];
+            for (int i = 0; i < cylinders.getLength(); i++) {
+                const auto &c = cylinders[i];
+                int x = 0;
+                int y = 0;
+                int z = 0;
+                int r = 0;
+                int height = 100;
+                int cr = 255;
+                int cg = 255;
+                int cb = 255;
+
+                c.lookupValue("x", x);
+                c.lookupValue("y", y);
+                c.lookupValue("z", z);
+                c.lookupValue("r", r);
+                c.lookupValue("height", height);
+
+                const auto &color = c["color"];
+                color.lookupValue("r", cr);
+                color.lookupValue("g", cg);
+                color.lookupValue("b", cb);
+
+                objects.push_back(
+                    ObjectFactory::createCylinder(
+                        Math::Point3D(x, y, z),
+                        r,
+                        height,
+                        Color(cr / 255.0, cg / 255.0, cb / 255.0)
+                    )
+                );
+            }
+        }
     };
     void Scene::loadLights(const libconfig::Setting &lights)
     {

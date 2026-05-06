@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include "../Primitives/Sphere.hpp"
 #include "../Primitives/Plane.hpp"
+#include "../Primitives/Cylinder.hpp"
 
 // #include 
 
@@ -26,6 +27,12 @@ public:
     static std::shared_ptr<IObject> createPlane(
         Axis axis,
         double position,
+        const Color &color
+    );
+    static std::shared_ptr<IObject> createCylinder(
+        const Math::Point3D &center,
+        double radius,
+        double height,
         const Color &color
     );
 };

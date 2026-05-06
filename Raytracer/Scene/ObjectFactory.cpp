@@ -16,4 +16,13 @@ namespace RayTracer {
     ) {
         return std::make_shared<Plane>(axis, position, color);
     }
+
+    std::shared_ptr<IObject> ObjectFactory::createCylinder(
+        const Math::Point3D &center,
+        double radius,
+        double height,
+        const Color &color
+    ) {
+        return std::make_shared<Cylinder>(center, radius, height, color);
+    }
 }
