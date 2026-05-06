@@ -1,28 +1,51 @@
 #include "ObjectFactory.hpp"
 
 namespace RayTracer {
-    std::shared_ptr<IObject> ObjectFactory::createSphere(
-        const Math::Point3D &center,
-        double radius,
-        const Color &color
-    ) {
-        return std::make_shared<RayTracer::Sphere>(center, radius, color);
+    std::unique_ptr<IObject> ObjectFactory::createSphere(
+        int x, int y, int z,
+        int r,
+        int cr, int cg, int cb)
+        {
+        return std::unique_ptr<IObject>(
+            new Sphere(
+                Math::Point3D(x, y, z),
+                r,
+                Color(cr / 255.0, cg / 255.0, cb / 255.0)
+            )
+        );
     }
 
-    std::shared_ptr<IObject> ObjectFactory::createPlane(
-        Axis axis,
-        double position,
-        const Color &color
-    ) {
-        return std::make_shared<Plane>(axis, position, color);
-    }
+    std::unique_ptr<IObject> ObjectFactory::createPlane(
+        const std::string &axisStr,
+        int position,
+        int cr, int cg, int cb)
+    {
+        Axis axis = Axis::Y;
+        if (axisStr == "X") axis = Axis::X;
+        else if (axisStr == "Z") axis = Axis::Z;
 
-    std::shared_ptr<IObject> ObjectFactory::createCylinder(
-        const Math::Point3D &center,
-        double radius,
-        double height,
-        const Color &color
-    ) {
-        return std::make_shared<Cylinder>(center, radius, height, color);
+        return std::unique_ptr<IObject>(
+                new Plane(
+                    axis,
+                    position,
+                    Color(cr / 255.0, cg / 255.0, cb / 255.0)
+                )
+            );
+        }
+
+    std::unique_ptr<IObject> ObjectFactory::createCylinder(
+        int x, int y, int z,
+        int r,
+        int height,
+        int cr, int cg, int cb)
+    {
+        return std::unique_ptr<IObject>(
+            new Cylinder(
+                Math::Point3D(x, y, z),
+                r,
+                height,
+                Color(cr / 255.0, cg / 255.0, cb / 255.0)
+            )
+        );
     }
 }

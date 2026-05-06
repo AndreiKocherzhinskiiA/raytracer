@@ -30,102 +30,99 @@ namespace RayTracer {
         cam.makeScreen();
     };
 
-    void Scene::loadObjects(const libconfig::Setting &primitives) {
-        // if (!primitives.exists("spheres"))
-        //     return;
-        const auto &spheres = primitives["spheres"];
+    void Scene::parseSpheres(const libconfig::Setting &spheres)
+    {
         for (int i = 0; i < spheres.getLength(); i++) {
             const auto &s = spheres[i];
-            int x = 0;
-            int y = 0;
-            int z = 0;
+
+            int x = 0, y = 0,  z = 0;
             int r = 0;
+            int cr = 255, cg = 255, cb = 255;
             s.lookupValue("x", x);
             s.lookupValue("y", y);
             s.lookupValue("z", z);
             s.lookupValue("r", r);
-            const auto &color = s["color"];
-            int cr = 0;
-            int cg = 0;
-            int cb = 0;
-            color.lookupValue("r", cr);
-            color.lookupValue("g", cg);
-            color.lookupValue("b", cb);
+
+            if (s.exists("color")) {
+                const auto &color = s["color"];
+                color.lookupValue("r", cr);
+                color.lookupValue("g", cg);
+                color.lookupValue("b", cb);
+            }
+            
             objects.push_back(
-                ObjectFactory::createSphere(
-                    Math::Point3D(x, y, z),
-                    r,
-                    Color(cr / 255.0, cg / 255.0, cb / 255.0)
-                )
-            );
+                ObjectFactory::createSphere(x, y, z, r, cr, cg, cb)
+                );
+            }
         }
 
-        if (primitives.exists("planes")) {
-            const auto &planes = primitives["planes"];
-            for (int i = 0; i < planes.getLength(); i++) {
-                const auto &p = planes[i];
+     void Scene::parsePlanes(const libconfig::Setting &planes)
+    {
+        for (int i = 0; i < planes.getLength(); i++) {
+            const auto &p = planes[i];
 
-                std::string axisStr = "Y";
-                int position = 0;
-                int cr = 255, cg = 255, cb = 255;
+            std::string axis = "Y";
+            int position = 0;
+            int cr = 255, cg = 255, cb = 255;
 
-                p.lookupValue("axis", axisStr);
-                p.lookupValue("position", position);
+            p.lookupValue("axis", axis);
+            p.lookupValue("position", position);
 
+            if (p.exists("color")) {
                 const auto &color = p["color"];
                 color.lookupValue("r", cr);
                 color.lookupValue("g", cg);
                 color.lookupValue("b", cb);
-
-                Axis axis = Axis::Y;
-                if (axisStr == "X") axis = Axis::X;
-                else if (axisStr == "Z") axis = Axis::Z;
-
-                objects.push_back(
-                    ObjectFactory::createPlane(
-                        axis,
-                        position,
-                        Color(cr / 255.0, cg / 255.0, cb / 255.0)
-                    )
+            }
+            
+            objects.push_back(
+                ObjectFactory::createPlane(axis, position, cr, cg, cb)
                 );
             }
-        }
+        }    
 
-        if (primitives.exists("cylinders")) {
-            const auto &cylinders = primitives["cylinders"];
-            for (int i = 0; i < cylinders.getLength(); i++) {
-                const auto &c = cylinders[i];
-                int x = 0;
-                int y = 0;
-                int z = 0;
-                int r = 0;
-                int height = 100;
-                int cr = 255;
-                int cg = 255;
-                int cb = 255;
+    void Scene::parseCylinders(const libconfig::Setting &cylinders)
+    {
+        for (int i = 0; i < cylinders.getLength(); i++) {
+            const auto &c = cylinders[i];
 
-                c.lookupValue("x", x);
-                c.lookupValue("y", y);
-                c.lookupValue("z", z);
-                c.lookupValue("r", r);
-                c.lookupValue("height", height);
+            int x = 0, y = 0, z = 0;
+            int r = 0;
+            int height = 100;
+            int cr = 255, cg = 255, cb = 255;
 
+            c.lookupValue("x", x);
+            c.lookupValue("y", y);
+            c.lookupValue("z", z);
+            c.lookupValue("r", r);
+            c.lookupValue("height", height);
+
+            if (c.exists("color")) {
                 const auto &color = c["color"];
                 color.lookupValue("r", cr);
                 color.lookupValue("g", cg);
                 color.lookupValue("b", cb);
-
-                objects.push_back(
-                    ObjectFactory::createCylinder(
-                        Math::Point3D(x, y, z),
-                        r,
-                        height,
-                        Color(cr / 255.0, cg / 255.0, cb / 255.0)
-                    )
-                );
             }
+
+            objects.push_back(
+                ObjectFactory::createCylinder(x, y, z, r, height, cr, cg, cb)
+            );
         }
-    };
+    }
+    
+    void Scene::loadObjects(const libconfig::Setting &primitives)
+    {
+        if (primitives.exists("spheres"))
+            parseSpheres(primitives["spheres"]);
+
+        if (primitives.exists("planes"))
+            parsePlanes(primitives["planes"]);
+
+        if (primitives.exists("cylinders"))
+            parseCylinders(primitives["cylinders"]);
+    }
+
+
     void Scene::loadLights(const libconfig::Setting &lights)
     {
         lights.lookupValue("ambient", ambient);

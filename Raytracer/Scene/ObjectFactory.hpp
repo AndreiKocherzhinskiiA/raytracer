@@ -19,22 +19,21 @@ class ObjectFactory {
 //     using FactoryFunc = std::function<std::shared_ptr<RayTracer::IObject>(const std::string &)>;
 //     static std::unordered_map<std::string, FactoryFunc> _funcMap;
 public:
-    static std::shared_ptr<IObject> createSphere(
-        const Math::Point3D &center,
-        double radius,
-        const Color &color
-    );
-    static std::shared_ptr<IObject> createPlane(
-        Axis axis,
-        double position,
-        const Color &color
-    );
-    static std::shared_ptr<IObject> createCylinder(
-        const Math::Point3D &center,
-        double radius,
-        double height,
-        const Color &color
-    );
+    static std::unique_ptr<IObject> createSphere(
+        int x, int y, int z,
+        int r,
+        int cr, int cg, int cb);
+
+    static std::unique_ptr<IObject> createPlane(
+        const std::string &axis,
+        int position,
+        int cr, int cg, int cb);
+
+    static std::unique_ptr<IObject> createCylinder(
+        int x, int y, int z,
+        int r,
+        int height,
+        int cr, int cg, int cb);
 };
     // std::shared_ptr<RayTracer::IObject> makeObject(const std::string &path, const RayTracer::HittableList & list);
     // ObjectFactory(/* args */);

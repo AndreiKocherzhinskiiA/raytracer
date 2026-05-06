@@ -14,8 +14,11 @@ namespace RayTracer {
     {
     private:
         void loadCam(const libconfig::Setting &camera);
-        void loadObjects(const libconfig::Setting &primitives);
         void loadLights(const libconfig::Setting &lights);
+        void parseSpheres(const libconfig::Setting &spheres);
+        void parsePlanes(const libconfig::Setting &planes);
+        void parseCylinders(const libconfig::Setting &cylinders);
+        void loadObjects(const libconfig::Setting &primitives);
 
     public:
         Camera cam;
