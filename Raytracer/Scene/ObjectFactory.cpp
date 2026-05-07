@@ -48,4 +48,20 @@ namespace RayTracer {
             )
         );
     }
+
+    std::unique_ptr<IObject> ObjectFactory::createCone(
+        int x, int y, int z,
+        int r,
+        int height,
+        int cr, int cg, int cb)
+    {
+        return std::unique_ptr<IObject>(
+            new Cone(
+                Math::Point3D(x, y, z),
+                r,
+                height,
+                Color(cr / 255.0, cg / 255.0, cb / 255.0)
+            )
+        );
+    }
 }

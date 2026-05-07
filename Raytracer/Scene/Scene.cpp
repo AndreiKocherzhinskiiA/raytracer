@@ -109,6 +109,35 @@ namespace RayTracer {
             );
         }
     }
+
+    void Scene::parseCones(const libconfig::Setting &cones)
+    {
+        for (int i = 0; i < cones.getLength(); i++) {
+            const auto &c = cones[i];
+
+            int x = 0, y = 0, z = 0;
+            int r = 0;
+            int height = 100;
+            int cr = 255, cg = 255, cb = 255;
+
+            c.lookupValue("x", x);
+            c.lookupValue("y", y);
+            c.lookupValue("z", z);
+            c.lookupValue("r", r);
+            c.lookupValue("height", height);
+
+            if (c.exists("color")) {
+                const auto &color = c["color"];
+                color.lookupValue("r", cr);
+                color.lookupValue("g", cg);
+                color.lookupValue("b", cb);
+            }
+
+            objects.push_back(
+                ObjectFactory::createCone(x, y, z, r, height, cr, cg, cb)
+            );
+        }
+    }
     
     void Scene::loadObjects(const libconfig::Setting &primitives)
     {
@@ -120,6 +149,9 @@ namespace RayTracer {
 
         if (primitives.exists("cylinders"))
             parseCylinders(primitives["cylinders"]);
+
+        if (primitives.exists("cones"))
+            parseCones(primitives["cones"]);
     }
 
 

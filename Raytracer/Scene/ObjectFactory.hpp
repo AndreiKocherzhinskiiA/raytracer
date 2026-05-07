@@ -7,6 +7,7 @@
 #include "../Primitives/Sphere.hpp"
 #include "../Primitives/Plane.hpp"
 #include "../Primitives/Cylinder.hpp"
+#include "../Primitives/Cone.hpp"
 
 // #include 
 
@@ -30,6 +31,12 @@ public:
         int cr, int cg, int cb);
 
     static std::unique_ptr<IObject> createCylinder(
+        int x, int y, int z,
+        int r,
+        int height,
+        int cr, int cg, int cb);
+
+    static std::unique_ptr<IObject> createCone(
         int x, int y, int z,
         int r,
         int height,
