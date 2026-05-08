@@ -168,15 +168,24 @@ namespace RayTracer {
                 int x = 0;
                 int y = 0;
                 int z = 0;
+                int cr = 255;
+                int cg = 255;
+                int cb = 255;
 
                 p.lookupValue("x", x);
                 p.lookupValue("y", y);
                 p.lookupValue("z", z);
+                if (p.exists("color")) {
+                    const auto &color = p["color"];
+                    color.lookupValue("r", cr);
+                    color.lookupValue("g", cg);
+                    color.lookupValue("b", cb);
+                }
 
                 scene_lights.add(
                     std::make_unique<PointLight>(
                         Math::Point3D(x, y, z),
-                        Color(1, 1, 1)
+                        Color(cr / 255.0, cg / 255.0, cb / 255.0)
                     )
                 );
             }
@@ -189,15 +198,24 @@ namespace RayTracer {
                 int x = 0;
                 int y = 0;
                 int z = 0;
+                int cr = 255;
+                int cg = 255;
+                int cb = 255;
 
                 d.lookupValue("x", x);
                 d.lookupValue("y", y);
                 d.lookupValue("z", z);
+                if (d.exists("color")) {
+                    const auto &color = d["color"];
+                    color.lookupValue("r", cr);
+                    color.lookupValue("g", cg);
+                    color.lookupValue("b", cb);
+                }
 
                 scene_lights.add(
                     std::make_unique<Directional>(
                         Math::Vector3D(x, y, z),
-                        Color(1, 1, 1)
+                        Color(cr / 255.0, cg / 255.0, cb / 255.0)
                     )
                 );
             }

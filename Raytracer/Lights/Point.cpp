@@ -21,6 +21,6 @@ namespace RayTracer {
         double diff = std::max(0.0, obj.normal.dot(lightDir));
         // double dist = (_pos - obj.point).length();
         // double att = 1.0 / (1.0 + 0.005 * dist * dist);
-        color = color + (_color * diff * scene.diffuse);
+        color = color + (obj.material->color() * _color * diff * scene.diffuse);
     }
 }
