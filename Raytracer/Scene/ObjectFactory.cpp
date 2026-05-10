@@ -87,4 +87,22 @@ namespace RayTracer {
             )
         );
     }
+
+    std::unique_ptr<IObject> ObjectFactory::createCube(
+        int x, int y, int z,
+        int width, int height, int depth,
+        int cr, int cg, int cb,
+        const std::string &material)
+    {
+        Color color(cr / 255.0, cg / 255.0, cb / 255.0);
+        return std::unique_ptr<IObject>(
+            new Cube(
+                Math::Point3D(x, y, z),
+                width,
+                height,
+                depth,
+                createMaterial(color, material)
+            )
+        );
+    }
 }

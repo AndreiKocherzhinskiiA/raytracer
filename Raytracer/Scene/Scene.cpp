@@ -146,6 +146,43 @@ namespace RayTracer {
             );
         }
     }
+
+    void Scene::parseCubes(const libconfig::Setting &cubes)
+    {
+        for (int i = 0; i < cubes.getLength(); i++) {
+            const auto &c = cubes[i];
+
+            int x = 0, y = 0, z = 0;
+            int size = 50;
+            int width = 50, height = 50, depth = 50;
+            int cr = 255, cg = 255, cb = 255;
+            std::string material = "flat";
+
+            c.lookupValue("x", x);
+            c.lookupValue("y", y);
+            c.lookupValue("z", z);
+            if (c.lookupValue("size", size)) {
+                width = size;
+                height = size;
+                depth = size;
+            }
+            c.lookupValue("width", width);
+            c.lookupValue("height", height);
+            c.lookupValue("depth", depth);
+            c.lookupValue("material", material);
+
+            if (c.exists("color")) {
+                const auto &color = c["color"];
+                color.lookupValue("r", cr);
+                color.lookupValue("g", cg);
+                color.lookupValue("b", cb);
+            }
+
+            objects.push_back(
+                ObjectFactory::createCube(x, y, z, width, height, depth, cr, cg, cb, material)
+            );
+        }
+    }
     
     void Scene::loadObjects(const libconfig::Setting &primitives)
     {
@@ -160,6 +197,9 @@ namespace RayTracer {
 
         if (primitives.exists("cones"))
             parseCones(primitives["cones"]);
+
+        if (primitives.exists("cubes"))
+            parseCubes(primitives["cubes"]);
     }
 
 

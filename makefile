@@ -16,6 +16,7 @@ SRCS     = Raytracer/main.cpp \
            Raytracer/Primitives/Plane.cpp   \
            Raytracer/Primitives/Cylinder.cpp \
            Raytracer/Primitives/Cone.cpp \
+           Raytracer/Primitives/Cube.cpp \
            Raytracer/Materials/FlatColor.cpp \
            Raytracer/Materials/Reflection.cpp
 

@@ -19,6 +19,7 @@ namespace RayTracer {
         void parsePlanes(const libconfig::Setting &planes);
         void parseCylinders(const libconfig::Setting &cylinders);
         void parseCones(const libconfig::Setting &cones);
+        void parseCubes(const libconfig::Setting &cubes);
         void loadObjects(const libconfig::Setting &primitives);
 
     public:

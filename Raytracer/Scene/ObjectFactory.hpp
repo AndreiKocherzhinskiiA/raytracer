@@ -8,6 +8,7 @@
 #include "../Primitives/Plane.hpp"
 #include "../Primitives/Cylinder.hpp"
 #include "../Primitives/Cone.hpp"
+#include "../Primitives/Cube.hpp"
 
 // #include 
 
@@ -43,6 +44,12 @@ public:
         int x, int y, int z,
         int r,
         int height,
+        int cr, int cg, int cb,
+        const std::string &material);
+
+    static std::unique_ptr<IObject> createCube(
+        int x, int y, int z,
+        int width, int height, int depth,
         int cr, int cg, int cb,
         const std::string &material);
 };
