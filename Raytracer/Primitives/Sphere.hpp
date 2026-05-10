@@ -7,6 +7,7 @@
 #include "../Core/Color.hpp"
 #include "../Materials/FlatColor.hpp"
 #include <iostream>
+#include <memory>
 
 namespace RayTracer {
     class Sphere : public IObject
@@ -18,7 +19,7 @@ namespace RayTracer {
         Color color = {0, 0, 0};
 
     public:
-        Sphere(const Math::Point3D &center, double radius, const Color &color);
+        Sphere(const Math::Point3D &center, double radius, const Color &color, std::shared_ptr<IMaterial> material);
         bool hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const override;
         ~Sphere() = default;
     };

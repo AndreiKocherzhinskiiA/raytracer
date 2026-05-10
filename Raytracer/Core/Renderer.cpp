@@ -48,7 +48,7 @@ namespace RayTracer {
         Color attenuation;
         if (obj.material->scatter(ray, obj, attenuation, scatter)) {
             Color indirect = attenuation * render(scatter, depth + 1);
-            return direct + indirect;
+            return indirect;
         }
         return direct;
     }

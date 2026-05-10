@@ -3,10 +3,9 @@
 #include <cmath>
 
 namespace RayTracer {
-    Sphere::Sphere(const Math::Point3D &center, double radius, const Color &color)
-        : center(center), radius(radius), color(color)
+    Sphere::Sphere(const Math::Point3D &center, double radius, const Color &color, std::shared_ptr<IMaterial> material)
+        : center(center), radius(radius), material(material), color(color)
     {
-        material = std::make_shared<FlatColor>(color);
     }
 
     bool Sphere::hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const

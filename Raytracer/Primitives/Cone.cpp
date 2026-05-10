@@ -9,10 +9,10 @@
 #include <cmath>
 
 namespace RayTracer {
-    Cone::Cone(const Math::Point3D &center, double radius, double height, const Color &color)
-        : _center(center), _radius(radius), _height(height)
+    Cone::Cone(const Math::Point3D &center, double radius, double height, const Color &color, std::shared_ptr<IMaterial> material)
+        : _center(center), _radius(radius), _height(height), _material(material)
     {
-        _material = std::make_shared<FlatColor>(color);
+        (void)color;
     }
 
     bool Cone::hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const

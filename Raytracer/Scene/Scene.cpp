@@ -38,10 +38,12 @@ namespace RayTracer {
             int x = 0, y = 0,  z = 0;
             int r = 0;
             int cr = 255, cg = 255, cb = 255;
+            std::string material = "flat";
             s.lookupValue("x", x);
             s.lookupValue("y", y);
             s.lookupValue("z", z);
             s.lookupValue("r", r);
+            s.lookupValue("material", material);
 
             if (s.exists("color")) {
                 const auto &color = s["color"];
@@ -51,7 +53,7 @@ namespace RayTracer {
             }
             
             objects.push_back(
-                ObjectFactory::createSphere(x, y, z, r, cr, cg, cb)
+                ObjectFactory::createSphere(x, y, z, r, cr, cg, cb, material)
                 );
             }
         }
@@ -64,9 +66,11 @@ namespace RayTracer {
             std::string axis = "Y";
             int position = 0;
             int cr = 255, cg = 255, cb = 255;
+            std::string material = "flat";
 
             p.lookupValue("axis", axis);
             p.lookupValue("position", position);
+            p.lookupValue("material", material);
 
             if (p.exists("color")) {
                 const auto &color = p["color"];
@@ -76,7 +80,7 @@ namespace RayTracer {
             }
             
             objects.push_back(
-                ObjectFactory::createPlane(axis, position, cr, cg, cb)
+                ObjectFactory::createPlane(axis, position, cr, cg, cb, material)
                 );
             }
         }    
@@ -90,12 +94,14 @@ namespace RayTracer {
             int r = 0;
             int height = 100;
             int cr = 255, cg = 255, cb = 255;
+            std::string material = "flat";
 
             c.lookupValue("x", x);
             c.lookupValue("y", y);
             c.lookupValue("z", z);
             c.lookupValue("r", r);
             c.lookupValue("height", height);
+            c.lookupValue("material", material);
 
             if (c.exists("color")) {
                 const auto &color = c["color"];
@@ -105,7 +111,7 @@ namespace RayTracer {
             }
 
             objects.push_back(
-                ObjectFactory::createCylinder(x, y, z, r, height, cr, cg, cb)
+                ObjectFactory::createCylinder(x, y, z, r, height, cr, cg, cb, material)
             );
         }
     }
@@ -119,12 +125,14 @@ namespace RayTracer {
             int r = 0;
             int height = 100;
             int cr = 255, cg = 255, cb = 255;
+            std::string material = "flat";
 
             c.lookupValue("x", x);
             c.lookupValue("y", y);
             c.lookupValue("z", z);
             c.lookupValue("r", r);
             c.lookupValue("height", height);
+            c.lookupValue("material", material);
 
             if (c.exists("color")) {
                 const auto &color = c["color"];
@@ -134,7 +142,7 @@ namespace RayTracer {
             }
 
             objects.push_back(
-                ObjectFactory::createCone(x, y, z, r, height, cr, cg, cb)
+                ObjectFactory::createCone(x, y, z, r, height, cr, cg, cb, material)
             );
         }
     }

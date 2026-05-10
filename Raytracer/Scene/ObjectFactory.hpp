@@ -23,24 +23,28 @@ public:
     static std::unique_ptr<IObject> createSphere(
         int x, int y, int z,
         int r,
-        int cr, int cg, int cb);
+        int cr, int cg, int cb,
+        const std::string &material);
 
     static std::unique_ptr<IObject> createPlane(
         const std::string &axis,
         int position,
-        int cr, int cg, int cb);
+        int cr, int cg, int cb,
+        const std::string &material);
 
     static std::unique_ptr<IObject> createCylinder(
         int x, int y, int z,
         int r,
         int height,
-        int cr, int cg, int cb);
+        int cr, int cg, int cb,
+        const std::string &material);
 
     static std::unique_ptr<IObject> createCone(
         int x, int y, int z,
         int r,
         int height,
-        int cr, int cg, int cb);
+        int cr, int cg, int cb,
+        const std::string &material);
 };
     // std::shared_ptr<RayTracer::IObject> makeObject(const std::string &path, const RayTracer::HittableList & list);
     // ObjectFactory(/* args */);

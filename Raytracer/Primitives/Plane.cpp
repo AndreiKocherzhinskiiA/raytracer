@@ -3,10 +3,9 @@
 #include <cmath>
 
 namespace RayTracer {
-    Plane::Plane(Axis axis, double position, const Color &color)
-        : _axis(axis), _position(position), color(color)
+    Plane::Plane(Axis axis, double position, const Color &color, std::shared_ptr<IMaterial> material)
+        : _axis(axis), _position(position), material(material), color(color)
     {
-        material = std::make_shared<FlatColor>(color);
     }
 
     bool Plane::hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const

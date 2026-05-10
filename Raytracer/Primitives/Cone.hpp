@@ -26,7 +26,7 @@ namespace RayTracer {
         std::shared_ptr<IMaterial> _material;
 
     public:
-        Cone(const Math::Point3D &center, double radius, double height, const Color &color);
+        Cone(const Math::Point3D &center, double radius, double height, const Color &color, std::shared_ptr<IMaterial> material);
         bool hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const override;
         ~Cone() = default;
     };
