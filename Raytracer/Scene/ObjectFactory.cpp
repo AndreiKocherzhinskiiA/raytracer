@@ -17,26 +17,10 @@ namespace RayTracer {
         return std::unique_ptr<IObject>(new Sphere(s));
     }
 
-    std::unique_ptr<IObject> ObjectFactory::createPlane(
-        const std::string &axisStr,
-        int position,
-        int cr, int cg, int cb,
-        const std::string &material)
+    std::unique_ptr<IObject> ObjectFactory::createPlane(const libconfig::Setting &s)
     {
-        Axis axis = Axis::Y;
-        if (axisStr == "X") axis = Axis::X;
-        else if (axisStr == "Z") axis = Axis::Z;
-        Color color(cr / 255.0, cg / 255.0, cb / 255.0);
-
-        return std::unique_ptr<IObject>(
-                new Plane(
-                    axis,
-                    position,
-                    color,
-                    createMaterial(color, material)
-                )
-            );
-        }
+    return std::unique_ptr<IObject>(new Plane(s));
+    }
 
     std::unique_ptr<IObject> ObjectFactory::createCylinder(
         int x, int y, int z,

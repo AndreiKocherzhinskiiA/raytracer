@@ -20,7 +20,6 @@ namespace RayTracer {
         Color color = {0, 0, 0};
 
     public:
-        //Sphere(const Math::Point3D &center, double radius, const Color &color, std::shared_ptr<IMaterial> material);
         Sphere(const libconfig::Setting &info);
         bool hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const override;
         ~Sphere() = default;

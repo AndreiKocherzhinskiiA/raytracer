@@ -3,9 +3,34 @@
 #include <cmath>
 
 namespace RayTracer {
-    Plane::Plane(Axis axis, double position, const Color &color, std::shared_ptr<IMaterial> material)
-        : _axis(axis), _position(position), material(material), color(color)
+        Plane::Plane(const libconfig::Setting &s)
     {
+        std::string axisStr = "Y";
+        double position = 0;
+        int cr = 255, cg = 255, cb = 255;
+
+        s.lookupValue("axis", axisStr);
+        s.lookupValue("position", position);
+
+        if (s.exists("color")) {
+            const auto &c = s["color"];
+            c.lookupValue("r", cr);
+            c.lookupValue("g", cg);
+            c.lookupValue("b", cb);
+        }
+
+        color = Color(cr / 255.0, cg / 255.0, cb / 255.0);
+
+        if (axisStr == "X")
+            _axis = Axis::X;
+        else if (axisStr == "Y")
+            _axis = Axis::Y;
+        else
+            _axis = Axis::Z;
+
+        _position = position;
+
+        material = std::make_shared<FlatColor>(color);
     }
 
     bool Plane::hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const

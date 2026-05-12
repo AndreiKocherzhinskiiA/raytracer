@@ -7,6 +7,7 @@
 #include "../Core/Color.hpp"
 #include "../Materials/FlatColor.hpp"
 #include <iostream>
+#include <libconfig.h++>
 #include <memory>
 
 enum class Axis {
@@ -25,7 +26,7 @@ namespace RayTracer {
         Color color = {0, 0, 0};
 
     public:
-        Plane(Axis axis, double position, const Color &color, std::shared_ptr<IMaterial> material);
+        Plane(const libconfig::Setting &info);
         bool hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const override;
         ~Plane() = default;
     };

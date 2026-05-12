@@ -39,29 +39,11 @@ namespace RayTracer {
             }
         }
 
-     void Scene::parsePlanes(const libconfig::Setting &planes)
+    void Scene::parsePlanes(const libconfig::Setting &planes)
     {
         for (int i = 0; i < planes.getLength(); i++) {
-            const auto &p = planes[i];
-
-            std::string axis = "Y";
-            int position = 0;
-            int cr = 255, cg = 255, cb = 255;
-            std::string material = "flat";
-
-            p.lookupValue("axis", axis);
-            p.lookupValue("position", position);
-            p.lookupValue("material", material);
-
-            if (p.exists("color")) {
-                const auto &color = p["color"];
-                color.lookupValue("r", cr);
-                color.lookupValue("g", cg);
-                color.lookupValue("b", cb);
-            }
-            
             objects.push_back(
-                ObjectFactory::createPlane(axis, position, cr, cg, cb, material)
+                ObjectFactory::createPlane(planes[i])
                 );
             }
         }    
