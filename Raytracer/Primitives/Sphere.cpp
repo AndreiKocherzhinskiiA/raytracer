@@ -28,9 +28,10 @@ namespace RayTracer {
         radius = r;
         color = Color(cr / 255.0, cg / 255.0, cb / 255.0);
 
-        if (material == "flat") {
+        if (material == "reflection")
+            this->material = std::make_shared<Reflection>(color);
+        else
             this->material = std::make_shared<FlatColor>(color);
-        }
     }
     
     bool Sphere::hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const

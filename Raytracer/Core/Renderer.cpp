@@ -14,10 +14,10 @@ namespace RayTracer {
         r = std::clamp(r, 0.0, 1.0);
         g = std::clamp(g, 0.0, 1.0);
         b = std::clamp(b, 0.0, 1.0);
-        //helps with brightness
-        // r = std::pow(r, 1.0 / 2.2);
-        // g = std::pow(g, 1.0 / 2.2);
-        // b = std::pow(b, 1.0 / 2.2);
+        // Convert linear light values to display-space brightness.
+        r = std::pow(r, 1.0 / 2.2);
+        g = std::pow(g, 1.0 / 2.2);
+        b = std::pow(b, 1.0 / 2.2);
 
         int rbyte = int(255.999 * r);
         int gbyte = int(255.999 * g);

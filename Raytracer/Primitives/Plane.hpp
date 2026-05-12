@@ -6,6 +6,7 @@
 #include "../Core/HitObject.hpp"
 #include "../Core/Color.hpp"
 #include "../Materials/FlatColor.hpp"
+#include "../Materials/Reflection.hpp"
 #include <iostream>
 #include <libconfig.h++>
 #include <memory>

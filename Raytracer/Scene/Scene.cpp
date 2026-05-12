@@ -6,7 +6,14 @@ namespace RayTracer {
 
     void Scene::loadCam(const libconfig::Setting &camera)
     {
-        int width, height, x, y, z, rx, ry, rz = 0;
+        int width = 0;
+        int height = 0;
+        int x = 0;
+        int y = 0;
+        int z = 0;
+        int rx = 0;
+        int ry = 0;
+        int rz = 0;
         double fov = 0;
 
         camera["resolution"].lookupValue("width", width);
@@ -48,8 +55,12 @@ namespace RayTracer {
             const auto &points = lights["point"];
             for (int i = 0; i < points.getLength(); i++) {
                 const auto &p = points[i];
-                int x, y, z = 0;
-                int cr, cg, cb = 255;
+                int x = 0;
+                int y = 0;
+                int z = 0;
+                int cr = 255;
+                int cg = 255;
+                int cb = 255;
 
                 p.lookupValue("x", x);
                 p.lookupValue("y", y);
@@ -74,8 +85,12 @@ namespace RayTracer {
             const auto &directionals = lights["directional"];
             for (int i = 0; i < directionals.getLength(); i++) {
                 const auto &d = directionals[i];
-                int x, y, z = 0;
-                int cr, cg, cb = 255;
+                int x = 0;
+                int y = 0;
+                int z = 0;
+                int cr = 255;
+                int cg = 255;
+                int cb = 255;
 
                 d.lookupValue("x", x);
                 d.lookupValue("y", y);

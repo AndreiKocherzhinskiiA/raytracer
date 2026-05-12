@@ -8,9 +8,16 @@ namespace RayTracer {
         std::string axisStr = "Y";
         double position = 0;
         int cr = 255, cg = 255, cb = 255;
+        std::string materialName = "flat";
 
         s.lookupValue("axis", axisStr);
-        s.lookupValue("position", position);
+        s.lookupValue("material", materialName);
+        if (!s.lookupValue("position", position)) {
+            int intPosition = 0;
+
+            if (s.lookupValue("position", intPosition))
+                position = intPosition;
+        }
 
         if (s.exists("color")) {
             const auto &c = s["color"];
@@ -30,7 +37,10 @@ namespace RayTracer {
 
         _position = position;
 
-        material = std::make_shared<FlatColor>(color);
+        if (materialName == "reflection")
+            material = std::make_shared<Reflection>(color);
+        else
+            material = std::make_shared<FlatColor>(color);
     }
 
     bool Plane::hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const

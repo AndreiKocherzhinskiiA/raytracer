@@ -13,7 +13,9 @@ namespace {
 
     Color readColor(const libconfig::Setting &setting)
     {
-        int r, g, b = 255;
+        int r = 255;
+        int g = 255;
+        int b = 255;
 
         if (setting.exists("color")) {
             const auto &color = setting["color"];
@@ -76,7 +78,10 @@ namespace RayTracer {
 
     std::shared_ptr<IObject> ObjectFactory::createCylinder(const libconfig::Setting &c)
     {
-        int x, y, z, r = 0;
+        int x = 0;
+        int y = 0;
+        int z = 0;
+        int r = 0;
         int height = 100;
         Color color = readColor(c);
         std::string material = readMaterial(c);
@@ -97,7 +102,10 @@ namespace RayTracer {
 
     std::shared_ptr<IObject> ObjectFactory::createCone(const libconfig::Setting &c)
     {
-        int x, y, z, r = 0;
+        int x = 0;
+        int y = 0;
+        int z = 0;
+        int r = 0;
         int height = 100;
         Color color = readColor(c);
         std::string material = readMaterial(c);
@@ -118,8 +126,13 @@ namespace RayTracer {
 
     std::shared_ptr<IObject> ObjectFactory::createCube(const libconfig::Setting &c)
     {
-        int x, y, z = 0;
-        int size, width, height, depth = 50;
+        int x = 0;
+        int y = 0;
+        int z = 0;
+        int size = 50;
+        int width = 50;
+        int height = 50;
+        int depth = 50;
         Color color = readColor(c);
         std::string material = readMaterial(c);
 
