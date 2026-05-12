@@ -118,7 +118,7 @@ namespace RayTracer {
 
     std::shared_ptr<IObject> ObjectFactory::createCube(const libconfig::Setting &c)
     {
-        int x, y, z, r = 0;
+        int x, y, z = 0;
         int size, width, height, depth = 50;
         Color color = readColor(c);
         std::string material = readMaterial(c);
