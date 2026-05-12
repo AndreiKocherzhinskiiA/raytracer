@@ -3,11 +3,36 @@
 #include <cmath>
 
 namespace RayTracer {
-    Sphere::Sphere(const Math::Point3D &center, double radius, const Color &color, std::shared_ptr<IMaterial> material)
-        : center(center), radius(radius), material(material), color(color)
-    {
-    }
 
+    Sphere::Sphere(const libconfig::Setting &s)
+    {
+        int x = 0, y = 0, z = 0;
+        int r = 0;
+        int cr = 255, cg = 255, cb = 255;
+        std::string material = "flat";
+
+        s.lookupValue("x", x);
+        s.lookupValue("y", y);
+        s.lookupValue("z", z);
+        s.lookupValue("r", r);
+        s.lookupValue("material", material);
+
+        if (s.exists("color")) {
+            const auto &c = s["color"];
+            c.lookupValue("r", cr);
+            c.lookupValue("g", cg);
+            c.lookupValue("b", cb);
+        }
+
+        center = Math::Point3D(x, y, z);
+        radius = r;
+        color = Color(cr / 255.0, cg / 255.0, cb / 255.0);
+
+        if (material == "flat") {
+            this->material = std::make_shared<FlatColor>(color);
+        }
+    }
+    
     bool Sphere::hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const
     {
         Math::Vector3D oc = ray.origin - center;

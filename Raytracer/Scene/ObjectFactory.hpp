@@ -21,11 +21,7 @@ class ObjectFactory {
 //     using FactoryFunc = std::function<std::shared_ptr<RayTracer::IObject>(const std::string &)>;
 //     static std::unordered_map<std::string, FactoryFunc> _funcMap;
 public:
-    static std::unique_ptr<IObject> createSphere(
-        int x, int y, int z,
-        int r,
-        int cr, int cg, int cb,
-        const std::string &material);
+    static std::unique_ptr<IObject> createSphere(const libconfig::Setting &info);
 
     static std::unique_ptr<IObject> createPlane(
         const std::string &axis,

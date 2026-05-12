@@ -33,27 +33,8 @@ namespace RayTracer {
     void Scene::parseSpheres(const libconfig::Setting &spheres)
     {
         for (int i = 0; i < spheres.getLength(); i++) {
-            const auto &s = spheres[i];
-
-            int x = 0, y = 0,  z = 0;
-            int r = 0;
-            int cr = 255, cg = 255, cb = 255;
-            std::string material = "flat";
-            s.lookupValue("x", x);
-            s.lookupValue("y", y);
-            s.lookupValue("z", z);
-            s.lookupValue("r", r);
-            s.lookupValue("material", material);
-
-            if (s.exists("color")) {
-                const auto &color = s["color"];
-                color.lookupValue("r", cr);
-                color.lookupValue("g", cg);
-                color.lookupValue("b", cb);
-            }
-            
             objects.push_back(
-                ObjectFactory::createSphere(x, y, z, r, cr, cg, cb, material)
+                ObjectFactory::createSphere(spheres[i])
                 );
             }
         }

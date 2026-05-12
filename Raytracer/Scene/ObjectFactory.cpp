@@ -12,21 +12,9 @@ namespace {
 }
 
 namespace RayTracer {
-    std::unique_ptr<IObject> ObjectFactory::createSphere(
-        int x, int y, int z,
-        int r,
-        int cr, int cg, int cb,
-        const std::string &material)
-        {
-        Color color(cr / 255.0, cg / 255.0, cb / 255.0);
-        return std::unique_ptr<IObject>(
-            new Sphere(
-                Math::Point3D(x, y, z),
-                r,
-                color,
-                createMaterial(color, material)
-            )
-        );
+    std::unique_ptr<IObject> ObjectFactory::createSphere(const libconfig::Setting &s)
+    {
+        return std::unique_ptr<IObject>(new Sphere(s));
     }
 
     std::unique_ptr<IObject> ObjectFactory::createPlane(
