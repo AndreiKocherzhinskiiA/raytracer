@@ -4,6 +4,7 @@
 #include <functional>
 #include <string>
 #include <unordered_map>
+#include <vector>
 #include "../Primitives/Sphere.hpp"
 #include "../Primitives/Plane.hpp"
 #include "../Primitives/Cylinder.hpp"
@@ -17,33 +18,23 @@
 namespace RayTracer {
 
 class ObjectFactory {
-// private:
-//     using FactoryFunc = std::function<std::shared_ptr<RayTracer::IObject>(const std::string &)>;
-//     static std::unordered_map<std::string, FactoryFunc> _funcMap;
+private:
+    using FactoryFunc = std::function<std::shared_ptr<RayTracer::IObject>(const libconfig::Setting &)>;
+    static const std::unordered_map<std::string, FactoryFunc> &funcMap();
+
 public:
-    static std::unique_ptr<IObject> createSphere(const libconfig::Setting &info);
+    static bool hasType(const std::string &type);
+    static std::shared_ptr<IObject> createObject(const std::string &type, const libconfig::Setting &info);
 
-    static std::unique_ptr<IObject> createPlane(const libconfig::Setting &info);
+    static std::shared_ptr<IObject> createSphere(const libconfig::Setting &info);
 
-    static std::unique_ptr<IObject> createCylinder(
-        int x, int y, int z,
-        int r,
-        int height,
-        int cr, int cg, int cb,
-        const std::string &material);
+    static std::shared_ptr<IObject> createPlane(const libconfig::Setting &info);
 
-    static std::unique_ptr<IObject> createCone(
-        int x, int y, int z,
-        int r,
-        int height,
-        int cr, int cg, int cb,
-        const std::string &material);
+    static std::shared_ptr<IObject> createCylinder(const libconfig::Setting &info);
 
-    static std::unique_ptr<IObject> createCube(
-        int x, int y, int z,
-        int width, int height, int depth,
-        int cr, int cg, int cb,
-        const std::string &material);
+    static std::shared_ptr<IObject> createCone(const libconfig::Setting &info);
+
+    static std::shared_ptr<IObject> createCube(const libconfig::Setting &info);
 };
     // std::shared_ptr<RayTracer::IObject> makeObject(const std::string &path, const RayTracer::HittableList & list);
     // ObjectFactory(/* args */);

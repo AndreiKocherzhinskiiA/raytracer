@@ -1,6 +1,7 @@
 #include "ObjectFactory.hpp"
 #include "../Materials/FlatColor.hpp"
 #include "../Materials/Reflection.hpp"
+#include <stdexcept>
 
 namespace {
     std::shared_ptr<RayTracer::IMaterial> createMaterial(const Color &color, const std::string &material)
@@ -9,72 +10,136 @@ namespace {
             return std::make_shared<RayTracer::Reflection>(color);
         return std::make_shared<RayTracer::FlatColor>(color);
     }
+
+    Color readColor(const libconfig::Setting &setting)
+    {
+        int r, g, b = 255;
+
+        if (setting.exists("color")) {
+            const auto &color = setting["color"];
+            color.lookupValue("r", r);
+            color.lookupValue("g", g);
+            color.lookupValue("b", b);
+        }
+        return Color(r / 255.0, g / 255.0, b / 255.0);
+    }
+
+    std::string readMaterial(const libconfig::Setting &setting)
+    {
+        std::string material = "flat";
+
+        setting.lookupValue("material", material);
+        return material;
+    }
 }
 
 namespace RayTracer {
-    std::unique_ptr<IObject> ObjectFactory::createSphere(const libconfig::Setting &s)
+    const std::unordered_map<std::string, ObjectFactory::FactoryFunc> &ObjectFactory::funcMap()
     {
-        return std::unique_ptr<IObject>(new Sphere(s));
+        static const std::unordered_map<std::string, FactoryFunc> map = {
+            {"spheres", &ObjectFactory::createSphere},
+            {"planes", &ObjectFactory::createPlane},
+            {"cylinders", &ObjectFactory::createCylinder},
+            {"cones", &ObjectFactory::createCone},
+            {"cubes", &ObjectFactory::createCube}
+        };
+
+        return map;
     }
 
-    std::unique_ptr<IObject> ObjectFactory::createPlane(const libconfig::Setting &s)
+    bool ObjectFactory::hasType(const std::string &type)
     {
-    return std::unique_ptr<IObject>(new Plane(s));
+        const auto &factories = funcMap();
+        const auto factory = factories.find(type);
+
+        return factory != factories.end();
     }
 
-    std::unique_ptr<IObject> ObjectFactory::createCylinder(
-        int x, int y, int z,
-        int r,
-        int height,
-        int cr, int cg, int cb,
-        const std::string &material)
+    std::shared_ptr<IObject> ObjectFactory::createObject(const std::string &type, const libconfig::Setting &info)
     {
-        Color color(cr / 255.0, cg / 255.0, cb / 255.0);
-        return std::unique_ptr<IObject>(
-            new Cylinder(
-                Math::Point3D(x, y, z),
-                r,
-                height,
-                color,
-                createMaterial(color, material)
-            )
+        const auto it = funcMap().find(type);
+
+        if (it == funcMap().end())
+            throw std::runtime_error("Unsupported primitive type: " + type);
+        return it->second(info);
+    }
+
+    std::shared_ptr<IObject> ObjectFactory::createSphere(const libconfig::Setting &s)
+    {
+        return std::make_shared<Sphere>(s);
+    }
+
+    std::shared_ptr<IObject> ObjectFactory::createPlane(const libconfig::Setting &s)
+    {
+        return std::make_shared<Plane>(s);
+    }
+
+    std::shared_ptr<IObject> ObjectFactory::createCylinder(const libconfig::Setting &c)
+    {
+        int x, y, z, r = 0;
+        int height = 100;
+        Color color = readColor(c);
+        std::string material = readMaterial(c);
+
+        c.lookupValue("x", x);
+        c.lookupValue("y", y);
+        c.lookupValue("z", z);
+        c.lookupValue("r", r);
+        c.lookupValue("height", height);
+        return std::make_shared<Cylinder>(
+            Math::Point3D(x, y, z),
+            r,
+            height,
+            color,
+            createMaterial(color, material)
         );
     }
 
-    std::unique_ptr<IObject> ObjectFactory::createCone(
-        int x, int y, int z,
-        int r,
-        int height,
-        int cr, int cg, int cb,
-        const std::string &material)
+    std::shared_ptr<IObject> ObjectFactory::createCone(const libconfig::Setting &c)
     {
-        Color color(cr / 255.0, cg / 255.0, cb / 255.0);
-        return std::unique_ptr<IObject>(
-            new Cone(
-                Math::Point3D(x, y, z),
-                r,
-                height,
-                color,
-                createMaterial(color, material)
-            )
+        int x, y, z, r = 0;
+        int height = 100;
+        Color color = readColor(c);
+        std::string material = readMaterial(c);
+
+        c.lookupValue("x", x);
+        c.lookupValue("y", y);
+        c.lookupValue("z", z);
+        c.lookupValue("r", r);
+        c.lookupValue("height", height);
+        return std::make_shared<Cone>(
+            Math::Point3D(x, y, z),
+            r,
+            height,
+            color,
+            createMaterial(color, material)
         );
     }
 
-    std::unique_ptr<IObject> ObjectFactory::createCube(
-        int x, int y, int z,
-        int width, int height, int depth,
-        int cr, int cg, int cb,
-        const std::string &material)
+    std::shared_ptr<IObject> ObjectFactory::createCube(const libconfig::Setting &c)
     {
-        Color color(cr / 255.0, cg / 255.0, cb / 255.0);
-        return std::unique_ptr<IObject>(
-            new Cube(
-                Math::Point3D(x, y, z),
-                width,
-                height,
-                depth,
-                createMaterial(color, material)
-            )
+        int x, y, z, r = 0;
+        int size, width, height, depth = 50;
+        Color color = readColor(c);
+        std::string material = readMaterial(c);
+
+        c.lookupValue("x", x);
+        c.lookupValue("y", y);
+        c.lookupValue("z", z);
+        if (c.lookupValue("size", size)) {
+            width = size;
+            height = size;
+            depth = size;
+        }
+        c.lookupValue("width", width);
+        c.lookupValue("height", height);
+        c.lookupValue("depth", depth);
+        return std::make_shared<Cube>(
+            Math::Point3D(x, y, z),
+            width,
+            height,
+            depth,
+            createMaterial(color, material)
         );
     }
 }

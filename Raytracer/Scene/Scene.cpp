@@ -1,18 +1,12 @@
 #include "Scene.hpp"
+#include <iostream>
 
 namespace RayTracer {
     Scene::Scene() {};
 
     void Scene::loadCam(const libconfig::Setting &camera)
     {
-        int width = 0;
-        int height = 0;
-        int x = 0;
-        int y = 0;
-        int z = 0;
-        int rx = 0;
-        int ry = 0;
-        int rz = 0;
+        int width, height, x, y, z, rx, ry, rz = 0;
         double fov = 0;
 
         camera["resolution"].lookupValue("width", width);
@@ -30,139 +24,17 @@ namespace RayTracer {
         cam.makeScreen();
     };
 
-    void Scene::parseSpheres(const libconfig::Setting &spheres)
-    {
-        for (int i = 0; i < spheres.getLength(); i++) {
-            objects.push_back(
-                ObjectFactory::createSphere(spheres[i])
-                );
-            }
-        }
-
-    void Scene::parsePlanes(const libconfig::Setting &planes)
-    {
-        for (int i = 0; i < planes.getLength(); i++) {
-            objects.push_back(
-                ObjectFactory::createPlane(planes[i])
-                );
-            }
-        }    
-
-    void Scene::parseCylinders(const libconfig::Setting &cylinders)
-    {
-        for (int i = 0; i < cylinders.getLength(); i++) {
-            const auto &c = cylinders[i];
-
-            int x = 0, y = 0, z = 0;
-            int r = 0;
-            int height = 100;
-            int cr = 255, cg = 255, cb = 255;
-            std::string material = "flat";
-
-            c.lookupValue("x", x);
-            c.lookupValue("y", y);
-            c.lookupValue("z", z);
-            c.lookupValue("r", r);
-            c.lookupValue("height", height);
-            c.lookupValue("material", material);
-
-            if (c.exists("color")) {
-                const auto &color = c["color"];
-                color.lookupValue("r", cr);
-                color.lookupValue("g", cg);
-                color.lookupValue("b", cb);
-            }
-
-            objects.push_back(
-                ObjectFactory::createCylinder(x, y, z, r, height, cr, cg, cb, material)
-            );
-        }
-    }
-
-    void Scene::parseCones(const libconfig::Setting &cones)
-    {
-        for (int i = 0; i < cones.getLength(); i++) {
-            const auto &c = cones[i];
-
-            int x = 0, y = 0, z = 0;
-            int r = 0;
-            int height = 100;
-            int cr = 255, cg = 255, cb = 255;
-            std::string material = "flat";
-
-            c.lookupValue("x", x);
-            c.lookupValue("y", y);
-            c.lookupValue("z", z);
-            c.lookupValue("r", r);
-            c.lookupValue("height", height);
-            c.lookupValue("material", material);
-
-            if (c.exists("color")) {
-                const auto &color = c["color"];
-                color.lookupValue("r", cr);
-                color.lookupValue("g", cg);
-                color.lookupValue("b", cb);
-            }
-
-            objects.push_back(
-                ObjectFactory::createCone(x, y, z, r, height, cr, cg, cb, material)
-            );
-        }
-    }
-
-    void Scene::parseCubes(const libconfig::Setting &cubes)
-    {
-        for (int i = 0; i < cubes.getLength(); i++) {
-            const auto &c = cubes[i];
-
-            int x = 0, y = 0, z = 0;
-            int size = 50;
-            int width = 50, height = 50, depth = 50;
-            int cr = 255, cg = 255, cb = 255;
-            std::string material = "flat";
-
-            c.lookupValue("x", x);
-            c.lookupValue("y", y);
-            c.lookupValue("z", z);
-            if (c.lookupValue("size", size)) {
-                width = size;
-                height = size;
-                depth = size;
-            }
-            c.lookupValue("width", width);
-            c.lookupValue("height", height);
-            c.lookupValue("depth", depth);
-            c.lookupValue("material", material);
-
-            if (c.exists("color")) {
-                const auto &color = c["color"];
-                color.lookupValue("r", cr);
-                color.lookupValue("g", cg);
-                color.lookupValue("b", cb);
-            }
-
-            objects.push_back(
-                ObjectFactory::createCube(x, y, z, width, height, depth, cr, cg, cb, material)
-            );
-        }
-    }
-    
     void Scene::loadObjects(const libconfig::Setting &primitives)
     {
-        if (primitives.exists("spheres"))
-            parseSpheres(primitives["spheres"]);
+        for (int i = 0; i < primitives.getLength(); i++) {
+            const auto &primitiveGroup = primitives[i];
+            const std::string type = primitiveGroup.getName();
 
-        if (primitives.exists("planes"))
-            parsePlanes(primitives["planes"]);
-
-        if (primitives.exists("cylinders"))
-            parseCylinders(primitives["cylinders"]);
-
-        if (primitives.exists("cones"))
-            parseCones(primitives["cones"]);
-
-        if (primitives.exists("cubes"))
-            parseCubes(primitives["cubes"]);
+            if (!ObjectFactory::hasType(type))
+                continue;
+            for (int j = 0; j < primitiveGroup.getLength(); j++)
+                objects.push_back(ObjectFactory::createObject(type, primitiveGroup[j]));
+        }
     }
 
 
@@ -176,12 +48,8 @@ namespace RayTracer {
             const auto &points = lights["point"];
             for (int i = 0; i < points.getLength(); i++) {
                 const auto &p = points[i];
-                int x = 0;
-                int y = 0;
-                int z = 0;
-                int cr = 255;
-                int cg = 255;
-                int cb = 255;
+                int x, y, z = 0;
+                int cr, cg, cb = 255;
 
                 p.lookupValue("x", x);
                 p.lookupValue("y", y);
@@ -206,12 +74,8 @@ namespace RayTracer {
             const auto &directionals = lights["directional"];
             for (int i = 0; i < directionals.getLength(); i++) {
                 const auto &d = directionals[i];
-                int x = 0;
-                int y = 0;
-                int z = 0;
-                int cr = 255;
-                int cg = 255;
-                int cb = 255;
+                int x, y, z = 0;
+                int cr, cg, cb = 255;
 
                 d.lookupValue("x", x);
                 d.lookupValue("y", y);
