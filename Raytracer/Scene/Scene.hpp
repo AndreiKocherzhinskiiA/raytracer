@@ -1,17 +1,18 @@
 #pragma once
-#include "Camera.hpp"
-#include "../Core/Lights.hpp"
-#include "ObjectFactory.hpp"
-#include <string>
-#include <libconfig.h++>
-#include "../Lights/Directional.hpp"
-#include "../Lights/Point.hpp"
-#include "../Primitives/Plane.hpp"
 
+#include "Camera.hpp"
+#include "../Core/IObject.hpp"
+#include "../Core/ILight.hpp"
+#include "../Core/Lights.hpp"
+#include "Factory.hpp"
+#include <string>
+#include <vector>
+#include <memory>
+#include <libconfig.h++>
 
 namespace RayTracer {
-    class Scene
-    {
+
+class Scene {
     private:
         void loadCam(const libconfig::Setting &camera);
         void loadLights(const libconfig::Setting &lights);
@@ -23,9 +24,10 @@ namespace RayTracer {
         Lights scene_lights;
         double ambient = 0;
         double diffuse = 1;
+
         Scene();
         bool init(const std::string &path);
         ~Scene() = default;
 };
 
-}
+} // namespace RayTracer

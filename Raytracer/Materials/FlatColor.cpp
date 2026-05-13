@@ -9,13 +9,6 @@ namespace RayTracer {
             (void)rec;
             (void)color;
             (void)scattered;
-            // Math::Vector3D scatterDir = rec.normal + Math::Vector3D::randomUnitVector() ;
-
-            // if (scatterDir.length() < 1e-8)
-            //     scatterDir = rec.normal;
-
-            // scattered = Ray(rec.point, scatterDir.normalize());
-            // color= _color;
             return false; // was true
         };
         const Color &FlatColor::color() const {
@@ -23,3 +16,4 @@ namespace RayTracer {
         }
         // FlatColor::~FlatColor() = default;
 };
+

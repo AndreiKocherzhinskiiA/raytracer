@@ -9,7 +9,7 @@ SRCS     = Raytracer/main.cpp \
            Raytracer/Core/Renderer.cpp \
            Raytracer/Core/Lights.cpp \
            Raytracer/Scene/Scene.cpp \
-           Raytracer/Scene/ObjectFactory.cpp \
+           Raytracer/Scene/Factory.cpp \
            Raytracer/Lights/Directional.cpp \
            Raytracer/Lights/Point.cpp \
            Raytracer/Primitives/Sphere.cpp  \

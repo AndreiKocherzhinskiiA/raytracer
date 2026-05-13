@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Core/IMaterial.hpp"
+#include <libconfig.h++>
 
 namespace RayTracer {
     class Reflection : public IMaterial

@@ -10,11 +10,11 @@ namespace RayTracer {
     class Lights
     {
     private:
-        std::vector<std::unique_ptr<ILight>> lights;
+        std::vector<std::shared_ptr<ILight>> lights;
 
     public:
         Lights() = default;
-        void add(std::unique_ptr<ILight> newlight);
+        void add(std::shared_ptr<ILight> newlight);
         void light(const HitObject& obj, Color& color, const Scene& scene) const;
         ~Lights() = default;
     };
