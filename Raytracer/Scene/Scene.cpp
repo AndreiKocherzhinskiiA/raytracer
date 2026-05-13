@@ -23,9 +23,9 @@ void Scene::loadCam(const libconfig::Setting &camera)
     camera["rotation"].lookupValue("z", rz);
     camera.lookupValue("fieldOfView", fov);
 
-    cam = Camera(width, height, Math::Point3D(x, y, z), fov);
-    cam.rotation = Math::Vector3D(rx, ry, rz);
-    cam.makeScreen();
+    _cam = Camera(width, height, Math::Point3D(x, y, z), fov);
+    _cam.rotation = Math::Vector3D(rx, ry, rz);
+    _cam.makeScreen();
 }
 
 void Scene::loadObjects(const libconfig::Setting &primitives)
@@ -35,14 +35,14 @@ void Scene::loadObjects(const libconfig::Setting &primitives)
         const std::string type = group.getName();
 
         for (int j = 0; j < group.getLength(); j++)
-            objects.push_back(Factory<IObject>::create(type, group[j]));
+            _objects.push_back(Factory<IObject>::create(type, group[j]));
     }
 }
 
 void Scene::loadLights(const libconfig::Setting &lights)
 {
-    lights.lookupValue("ambient", ambient);
-    lights.lookupValue("diffuse", diffuse);
+    lights.lookupValue("ambient", _ambient);
+    lights.lookupValue("diffuse", _diffuse);
 
     for (int i = 0; i < lights.getLength(); i++) {
         const auto &group = lights[i];
@@ -51,7 +51,7 @@ void Scene::loadLights(const libconfig::Setting &lights)
         if (type == "ambient" || type == "diffuse")
             continue;
         for (int j = 0; j < group.getLength(); j++)
-            scene_lights.add(Factory<ILight>::create(type, group[j]));
+            _lights.add(Factory<ILight>::create(type, group[j]));
     }
 }
 

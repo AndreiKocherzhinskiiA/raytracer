@@ -33,7 +33,7 @@ namespace RayTracer {
         HitObject tempRec;
         bool hitAnything = false;
         double closest = infinity;
-        for (const auto& object : scene.objects) {
+        for (const auto& object : scene.objects()) {
             if (object->hit(ray, tempRec, epsilon, closest)) {
                 hitAnything = true;
                 closest = tempRec.t;
@@ -43,7 +43,7 @@ namespace RayTracer {
         if (!hitAnything)
             return {1, 1, 1}; // sky color
         Color direct = {0, 0, 0};
-        scene.scene_lights.light(obj, direct, scene);
+        scene.lights().light(obj, direct, scene);
         Ray scatter;
         Color attenuation;
         if (obj.material->scatter(ray, obj, attenuation, scatter)) {
@@ -55,23 +55,23 @@ namespace RayTracer {
 
     void Renderer::render_thread() {
         std::vector<std::pair<int, Color>> localResults;
-        localResults.reserve((scene.cam.image_width * scene.cam.image_height) / number_of_threads + scene.cam.image_width * chunkSize);
+        localResults.reserve((scene.cam().image_width * scene.cam().image_height) / number_of_threads + scene.cam().image_width * chunkSize);
 
         while (true) {
             int startY = row.fetch_add(chunkSize);
-            if (startY >= scene.cam.image_height)
+            if (startY >= scene.cam().image_height)
                 break;
-            int endY = std::min(startY + chunkSize, scene.cam.image_height);
+            int endY = std::min(startY + chunkSize, scene.cam().image_height);
 
             for (int y = startY; y < endY; ++y) {
-                for (int x = 0; x < scene.cam.image_width; x++) {
+                for (int x = 0; x < scene.cam().image_width; x++) {
                     Color pxl_color{0, 0, 0};
                     for (int i = 0; i < samples; i++) {
-                        Ray r = scene.cam.ray(x, y);
+                        Ray r = scene.cam().ray(x, y);
                         pxl_color = pxl_color + render(r, 0);
                     }
                     pxl_color = pxl_color / samples;
-                    int idx = x + (scene.cam.image_height - 1 - y) * scene.cam.image_width;
+                    int idx = x + (scene.cam().image_height - 1 - y) * scene.cam().image_width;
                     //helps with the speed of writes to buffer
                     localResults.emplace_back(idx, pxl_color);
                 }
@@ -92,8 +92,8 @@ namespace RayTracer {
     }
 
     void Renderer::render() {
-        std::cout << "P3\n" << scene.cam.image_width << " " << scene.cam.image_height << "\n255\n";
-        print_Buffer.resize(scene.cam.image_width * scene.cam.image_height);
+        std::cout << "P3\n" << scene.cam().image_width << " " << scene.cam().image_height << "\n255\n";
+        print_Buffer.resize(scene.cam().image_width * scene.cam().image_height);
         setUpThreads(number_of_threads);
         for(const auto &pxl : print_Buffer)
             writeColor(std::cout, pxl);

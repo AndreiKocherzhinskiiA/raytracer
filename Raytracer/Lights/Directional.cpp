@@ -22,7 +22,7 @@ namespace RayTracer {
     void Directional::light(const HitObject& obj, Color& color, const Scene& scene) const {
         Math::Vector3D lightDir = directionFrom(obj.point).normalize();
         double diff = std::max(0.0, obj.normal.dot(lightDir));
-        color = color + (obj.material->color() * _color * diff * scene.diffuse);
+        color = color + (obj.material->color() * _color * diff * scene.diffuse());
     }
 
 }

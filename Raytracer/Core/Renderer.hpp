@@ -19,22 +19,23 @@ namespace RayTracer {
     class Renderer
     {
     private:
-        void writeColor(std::ostream& out, const Color& pixel_color);
-        const Scene &scene;
-        int max_depth = 3;
-        void setUpThreads(int num_of_threads);
-        std::vector<Color> print_Buffer;
-        std::atomic<int> row = 0;
-        void renderRow(int y);
         const int number_of_threads = 8;
         const int samples = 100;
         const int chunkSize = 128;
+        const Scene &scene;
+        int max_depth = 3;
+        std::vector<Color> print_Buffer;
+        std::atomic<int> row = 0;
+
+        void writeColor(std::ostream& out, const Color& pixel_color);
+        void setUpThreads(int num_of_threads);
+        void renderRow(int y);
+        Color render(const Ray &ray, int depth = 0);
     public:
         void render_thread();
         ~Renderer() = default;
         Renderer(const Scene &scene);
         void render();
-        Color render(const Ray &ray, int depth = 0);
     };
 }
 
