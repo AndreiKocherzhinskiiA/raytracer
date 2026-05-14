@@ -1,5 +1,6 @@
 #include "Plane.hpp"
 #include "../Core/HitObject.hpp"
+#include "../Scene/Factory.hpp"
 #include <cmath>
 
 namespace RayTracer {
@@ -7,7 +8,6 @@ namespace RayTracer {
     {
         std::string axisStr = "Y";
         double position = 0;
-        int cr = 255, cg = 255, cb = 255;
         std::string materialName = "flat";
 
         s.lookupValue("axis", axisStr);
@@ -19,15 +19,6 @@ namespace RayTracer {
                 position = intPosition;
         }
 
-        if (s.exists("color")) {
-            const auto &c = s["color"];
-            c.lookupValue("r", cr);
-            c.lookupValue("g", cg);
-            c.lookupValue("b", cb);
-        }
-
-        color = Color(cr / 255.0, cg / 255.0, cb / 255.0);
-
         if (axisStr == "X")
             _axis = Axis::X;
         else if (axisStr == "Y")
@@ -37,10 +28,11 @@ namespace RayTracer {
 
         _position = position;
 
-        if (materialName == "reflection")
-            material = std::make_shared<Reflection>(color);
-        else
-            material = std::make_shared<FlatColor>(color);
+        const auto &mat = s["material"];
+        std::string type = "flatcolor";
+        mat.lookupValue("type", type);
+
+        material = Factory<IMaterial>::create(type, mat);
     }
 
     bool Plane::hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const

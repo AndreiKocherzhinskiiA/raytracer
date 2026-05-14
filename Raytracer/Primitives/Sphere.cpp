@@ -1,5 +1,5 @@
 #include "Sphere.hpp"
-#include "Factory.hpp"
+#include "../Scene/Factory.hpp"
 #include "../Core/HitObject.hpp"
 #include <cmath>
 
@@ -24,12 +24,7 @@ namespace RayTracer {
         std::string type = "flatcolor";
         mat.lookupValue("type", type);
 
-        this->material = RayTracer::Factory<IMaterial>::create(type, mat);
-
-        // if (type == "reflection")
-        //     this->material = std::make_shared<Reflection>(mat);
-        // else
-        //     this->material = std::make_shared<FlatColor>(mat);
+        this->material = Factory<IMaterial>::create(type, mat);
     }
     
     bool Sphere::hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const
