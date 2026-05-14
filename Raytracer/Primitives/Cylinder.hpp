@@ -24,9 +24,10 @@ namespace RayTracer {
         double _radius;
         double _height;
         std::shared_ptr<IMaterial> _material;
+        Color _color;
 
     public:
-        Cylinder(const Math::Point3D &center, double radius, double height, const Color &color, std::shared_ptr<IMaterial> material);
+        Cylinder(const libconfig::Setting &info);
         bool hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const override;
         ~Cylinder() = default;
     };

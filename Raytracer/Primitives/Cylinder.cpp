@@ -6,14 +6,37 @@
 */
 
 #include "Cylinder.hpp"
+#include "../Scene/Factory.hpp"
 #include <cmath>
 
 namespace RayTracer {
-    Cylinder::Cylinder(const Math::Point3D &center, double radius, double height, const Color &color, std::shared_ptr<IMaterial> material)
-        : _center(center), _radius(radius), _height(height), _material(material)
-    {
-        (void)color;
-    }
+    Cylinder::Cylinder(const libconfig::Setting &s)
+{
+    int x = 0, y = 0, z = 0;
+
+    double radius = 1;
+    double height = 1;
+
+    std::string materialName = "flat";
+
+    s.lookupValue("x", x);
+    s.lookupValue("y", y);
+    s.lookupValue("z", z);
+
+    s.lookupValue("radius", radius);
+    s.lookupValue("height", height);
+    s.lookupValue("material", materialName);
+
+    _center = Math::Point3D(x, y, z);
+    _radius = radius;
+    _height = height;
+
+    const auto &mat = s["material"];
+    std::string type = "flatcolor";
+    mat.lookupValue("type", type);
+
+    _material = Factory<IMaterial>::create(type, mat);
+}
 
     bool Cylinder::hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const
     {
