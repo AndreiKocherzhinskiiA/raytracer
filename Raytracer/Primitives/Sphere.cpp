@@ -1,6 +1,8 @@
 #include "Sphere.hpp"
+#include "Factory.hpp"
 #include "../Core/HitObject.hpp"
 #include <cmath>
+
 
 namespace RayTracer {
 
@@ -8,30 +10,26 @@ namespace RayTracer {
     {
         int x = 0, y = 0, z = 0;
         int r = 0;
-        int cr = 255, cg = 255, cb = 255;
-        std::string material = "flat";
 
         s.lookupValue("x", x);
         s.lookupValue("y", y);
         s.lookupValue("z", z);
         s.lookupValue("r", r);
-        s.lookupValue("material", material);
-
-        if (s.exists("color")) {
-            const auto &c = s["color"];
-            c.lookupValue("r", cr);
-            c.lookupValue("g", cg);
-            c.lookupValue("b", cb);
-        }
 
         center = Math::Point3D(x, y, z);
         radius = r;
-        color = Color(cr / 255.0, cg / 255.0, cb / 255.0);
+        
+        const auto &mat = s["material"];
 
-        if (material == "reflection")
-            this->material = std::make_shared<Reflection>(color);
-        else
-            this->material = std::make_shared<FlatColor>(color);
+        std::string type = "flatcolor";
+        mat.lookupValue("type", type);
+
+        this->material = RayTracer::Factory<IMaterial>::create(type, mat);
+
+        // if (type == "reflection")
+        //     this->material = std::make_shared<Reflection>(mat);
+        // else
+        //     this->material = std::make_shared<FlatColor>(mat);
     }
     
     bool Sphere::hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const
