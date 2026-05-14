@@ -1,6 +1,9 @@
 #include "Cube.hpp"
 #include <algorithm>
+#include <libconfig.h++>
 #include <cmath>
+#include "../Materials/FlatColor.hpp"
+#include "../Scene/Factory.hpp"
 
 namespace {
     bool updateSlab(
@@ -40,9 +43,34 @@ namespace {
 }
 
 namespace RayTracer {
-    Cube::Cube(const Math::Point3D &center, double width, double height, double depth, std::shared_ptr<IMaterial> material)
-        : _center(center), _width(width), _height(height), _depth(depth), _material(material)
+    Cube::Cube (const libconfig::Setting &s)
     {
+        int x = 0, y = 0, z = 0;
+
+        double width = 1;
+        double height = 1;
+        double depth = 1;
+
+        std::string materialName = "flat";
+
+        s.lookupValue("x", x);
+        s.lookupValue("y", y);
+        s.lookupValue("z", z);
+
+        s.lookupValue("width", width);
+        s.lookupValue("height", height);
+        s.lookupValue("depth", depth);
+
+       _center = Math::Point3D(x, y, z);
+       _width = width;
+       _height = height;
+       _depth = depth;
+
+       const auto &mat = s["material"];
+       std::string type = "flatcolor";
+       mat.lookupValue("type", type);
+
+        _material = Factory<IMaterial>::create(type, mat);
     }
 
     bool Cube::hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const

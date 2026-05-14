@@ -6,6 +6,7 @@
 #include "../math/Point3D.hpp"
 #include "../math/Ray.hpp"
 #include <memory>
+#include <libconfig.h++>
 
 namespace RayTracer {
     class Cube : public IObject
@@ -18,7 +19,7 @@ namespace RayTracer {
         std::shared_ptr<IMaterial> _material;
 
     public:
-        Cube(const Math::Point3D &center, double width, double height, double depth, std::shared_ptr<IMaterial> material);
+        Cube(const libconfig::Setting &info);
         bool hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const override;
         ~Cube() = default;
     };
