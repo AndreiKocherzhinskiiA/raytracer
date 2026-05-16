@@ -3,7 +3,18 @@
 #include "../Core/HitObject.hpp"
 
 namespace RayTracer {
-    Reflection::Reflection(const Color &color): _color(color) {}
+    Reflection::Reflection(const libconfig::Setting &s)
+    {
+        double r = 1.0, g = 1.0, b = 1.0;
+
+    if (s.exists("color")) {
+        const auto &c = s["color"];
+        c.lookupValue("r", r);
+        c.lookupValue("g", g);
+        c.lookupValue("b", b);
+    }
+    _color = Color(r / 255.0, g / 255.0, b / 255.0);
+    }
 
     bool Reflection::scatter(const Ray& rayIn, const HitObject& rec, Color& color, Ray& scattered) const
     {

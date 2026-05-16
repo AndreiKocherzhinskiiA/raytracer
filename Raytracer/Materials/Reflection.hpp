@@ -10,7 +10,7 @@ namespace RayTracer {
         Color _color;
 
     public:
-        Reflection(const Color &color);
+        Reflection(const libconfig::Setting& s);
         bool scatter(const Ray& rayIn, const HitObject& rec, Color& color, Ray& scattered) const override;
         const Color& color() const override;
         ~Reflection() = default;
