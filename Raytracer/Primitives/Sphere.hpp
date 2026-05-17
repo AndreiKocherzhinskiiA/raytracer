@@ -26,8 +26,3 @@ namespace RayTracer {
         ~Sphere() = default;
     };
 }
-
-extern "C" RayTracer::IObject *Create(const libconfig::Setting &s)
-{
-    return new RayTracer::Sphere(s);
-}

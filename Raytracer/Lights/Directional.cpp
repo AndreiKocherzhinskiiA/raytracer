@@ -4,10 +4,29 @@
 #include "../Core/Constants.hpp"
 #include <algorithm>
 
+
 namespace RayTracer {
 
-    Directional::Directional(Math::Vector3D dir, Color color)
-        : _dir(dir.normalize()), _color(color) {}
+    Directional::Directional(const libconfig::Setting& s)
+    {
+        double x = 0, y = 0, z = 0;
+        double r = 1.0, g = 1.0, b = 1.0;
+
+        s.lookupValue("x", x);
+        s.lookupValue("y", y);
+        s.lookupValue("z", z);
+
+        if (s.exists("color")) {
+            const auto& c = s["color"];
+            c.lookupValue("r", r);
+            c.lookupValue("g", g);
+            c.lookupValue("b", b);
+        }
+
+        _dir = Math::Vector3D(x, y, z).normalize();
+        _color = Color(r / 255.0, g / 255.0, b / 255.0);
+    }
+
 
     Math::Vector3D Directional::directionFrom(const Math::Point3D& point) const {
         (void)point;
@@ -25,4 +44,8 @@ namespace RayTracer {
         color = color + (obj.material->color() * _color * diff * scene.diffuse());
     }
 
+}
+extern "C" RayTracer::ILight *Create(const libconfig::Setting &s)
+{
+    return new RayTracer::Directional(s);
 }

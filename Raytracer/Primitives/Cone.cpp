@@ -117,3 +117,8 @@ namespace RayTracer {
         return true;
     }
 }
+
+extern "C" RayTracer::IObject *Create(const libconfig::Setting &s)
+{
+    return new RayTracer::Cone(s);
+}

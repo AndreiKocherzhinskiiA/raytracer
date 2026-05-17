@@ -17,8 +17,3 @@ namespace RayTracer {
         // ~FlatColor() = default;
     };
 };
-
-// extern "C" RayTracer::IMaterial *Create(const libconfig::Setting &s)
-//  {
-//      return new RayTracer::FlatColor(s);
-//  }

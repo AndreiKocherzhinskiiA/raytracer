@@ -1,5 +1,6 @@
 #pragma once
 #include "../Core/ILight.hpp"
+#include <libconfig.h++>
 
 namespace RayTracer {
     class PointLight : public ILight {
@@ -8,7 +9,7 @@ namespace RayTracer {
         Color _color;
 
     public:
-        PointLight(Math::Point3D pos, Color color);
+        PointLight(const libconfig::Setting& s);
         Math::Vector3D directionFrom(const Math::Point3D& point) const override;
         double maxDistanceFrom(const Math::Point3D& point) const override;
         void light(const HitObject& obj, Color& color, const Scene& scene) const override;

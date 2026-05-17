@@ -8,23 +8,22 @@ Scene::Scene() {}
 
 void Scene::loadCam(const libconfig::Setting &camera)
 {
-    int width = 0, height = 0;
-    int x = 0, y = 0, z = 0;
-    int rx = 0, ry = 0, rz = 0;
-    double fov = 0;
+    double x = 0, y = 0, z = 0;
+    double dx = 0, dy = 0, dz = 0;
+    double fov = 90.0;
+    int width = 1080, height = 720;
 
-    camera["resolution"].lookupValue("width", width);
-    camera["resolution"].lookupValue("height", height);
     camera["position"].lookupValue("x", x);
     camera["position"].lookupValue("y", y);
     camera["position"].lookupValue("z", z);
-    camera["rotation"].lookupValue("x", rx);
-    camera["rotation"].lookupValue("y", ry);
-    camera["rotation"].lookupValue("z", rz);
-    camera.lookupValue("fieldOfView", fov);
+    camera["direction"].lookupValue("x", dx);
+    camera["direction"].lookupValue("y", dy);
+    camera["direction"].lookupValue("z", dz);
+    camera.lookupValue("fov", fov);
+    camera["resolution"].lookupValue("width", width);
+    camera["resolution"].lookupValue("height", height);
 
     _cam = Camera(width, height, Math::Point3D(x, y, z), fov);
-    _cam.rotation = Math::Vector3D(rx, ry, rz);
     _cam.makeScreen();
 }
 

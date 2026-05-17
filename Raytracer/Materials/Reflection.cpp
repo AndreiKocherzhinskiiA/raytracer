@@ -5,7 +5,7 @@
 namespace RayTracer {
     Reflection::Reflection(const libconfig::Setting &s)
     {
-        double r = 1.0, g = 1.0, b = 1.0;
+        double r = 255.0, g = 255.0, b = 255.0;
 
     if (s.exists("color")) {
         const auto &c = s["color"];
@@ -30,4 +30,9 @@ namespace RayTracer {
     {
         return _color;
     }
+}
+
+extern "C" RayTracer::IMaterial *Create(const libconfig::Setting &s)
+{
+    return new RayTracer::Reflection(s);
 }
