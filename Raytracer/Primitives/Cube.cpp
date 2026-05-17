@@ -4,6 +4,7 @@
 #include <cmath>
 #include "../Materials/FlatColor.hpp"
 #include "../Scene/Factory.hpp"
+#include "../math/Transform.hpp"
 
 namespace {
     bool updateSlab(
@@ -62,6 +63,12 @@ namespace RayTracer {
         s.lookupValue("width", width);
         s.lookupValue("height", height);
         s.lookupValue("depth", depth);
+        if (s.exists("rotation")) {
+            const auto &rotation = s["rotation"];
+            rotation.lookupValue("x", _rotation.x);
+            rotation.lookupValue("y", _rotation.y);
+            rotation.lookupValue("z", _rotation.z);
+        }
 
        _center = Math::Point3D(x, y, z);
        _width = width;
@@ -77,6 +84,10 @@ namespace RayTracer {
 
     bool Cube::hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const
     {
+        Ray localRay(
+            _center + Math::inverseRotateVector(ray.origin - _center, _rotation),
+            Math::inverseRotateVector(ray.direction, _rotation)
+        );
         Math::Point3D minBound(
             _center.x - _width / 2.0,
             _center.y - _height / 2.0,
@@ -92,11 +103,11 @@ namespace RayTracer {
         Math::Vector3D nearNormal;
         Math::Vector3D farNormal;
 
-        if (!updateSlab(ray.origin.x, ray.direction.x, minBound.x, maxBound.x, {-1, 0, 0}, {1, 0, 0}, nearT, farT, nearNormal, farNormal))
+        if (!updateSlab(localRay.origin.x, localRay.direction.x, minBound.x, maxBound.x, {-1, 0, 0}, {1, 0, 0}, nearT, farT, nearNormal, farNormal))
             return false;
-        if (!updateSlab(ray.origin.y, ray.direction.y, minBound.y, maxBound.y, {0, -1, 0}, {0, 1, 0}, nearT, farT, nearNormal, farNormal))
+        if (!updateSlab(localRay.origin.y, localRay.direction.y, minBound.y, maxBound.y, {0, -1, 0}, {0, 1, 0}, nearT, farT, nearNormal, farNormal))
             return false;
-        if (!updateSlab(ray.origin.z, ray.direction.z, minBound.z, maxBound.z, {0, 0, -1}, {0, 0, 1}, nearT, farT, nearNormal, farNormal))
+        if (!updateSlab(localRay.origin.z, localRay.direction.z, minBound.z, maxBound.z, {0, 0, -1}, {0, 0, 1}, nearT, farT, nearNormal, farNormal))
             return false;
 
         double t = nearT;
@@ -110,7 +121,9 @@ namespace RayTracer {
 
         obj.t = t;
         obj.point = ray.at(t);
-        obj.normal = normal;
+        obj.normal = Math::rotateVector(normal, _rotation).normalize();
+        if (ray.direction.dot(obj.normal) > 0.0)
+            obj.normal = obj.normal * -1.0;
         obj.material = _material;
         return true;
     }

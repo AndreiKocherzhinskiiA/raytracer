@@ -8,6 +8,7 @@
 #include "Cone.hpp"
 #include <cmath>
 #include "../Scene/Factory.hpp"
+#include "../math/Transform.hpp"
 
 namespace RayTracer {
     Cone::Cone(const libconfig::Setting &s)
@@ -29,6 +30,12 @@ namespace RayTracer {
     s.lookupValue("height", height);
 
     s.lookupValue("material", materialName);
+    if (s.exists("rotation")) {
+        const auto &rotation = s["rotation"];
+        rotation.lookupValue("x", _rotation.x);
+        rotation.lookupValue("y", _rotation.y);
+        rotation.lookupValue("z", _rotation.z);
+    }
 
     _center = Math::Point3D(x, y, z);
     _radius = radius;
@@ -47,19 +54,23 @@ namespace RayTracer {
         if (_height <= 0 || _radius <= 0)
             return false;
 
+        Ray localRay(
+            _center + Math::inverseRotateVector(ray.origin - _center, _rotation),
+            Math::inverseRotateVector(ray.direction, _rotation)
+        );
         double minY = _center.y - _height / 2.0;
         double maxY = _center.y + _height / 2.0;
         double slope = _radius / _height;
         double slope2 = slope * slope;
-        double ox = ray.origin.x - _center.x;
-        double oz = ray.origin.z - _center.z;
-        double apexToOriginY = maxY - ray.origin.y;
-        double a = ray.direction.x * ray.direction.x
-            + ray.direction.z * ray.direction.z
-            - slope2 * ray.direction.y * ray.direction.y;
-        double halfB = ox * ray.direction.x
-            + oz * ray.direction.z
-            + slope2 * apexToOriginY * ray.direction.y;
+        double ox = localRay.origin.x - _center.x;
+        double oz = localRay.origin.z - _center.z;
+        double apexToOriginY = maxY - localRay.origin.y;
+        double a = localRay.direction.x * localRay.direction.x
+            + localRay.direction.z * localRay.direction.z
+            - slope2 * localRay.direction.y * localRay.direction.y;
+        double halfB = ox * localRay.direction.x
+            + oz * localRay.direction.z
+            + slope2 * apexToOriginY * localRay.direction.y;
         double c = ox * ox + oz * oz - slope2 * apexToOriginY * apexToOriginY;
         bool hitAnything = false;
         double closest = tMax;
@@ -75,7 +86,7 @@ namespace RayTracer {
                 };
 
                 for (double t : roots) {
-                    Math::Point3D p = ray.at(t);
+                    Math::Point3D p = localRay.at(t);
                     if (t >= tMin && t <= closest && p.y >= minY && p.y <= maxY) {
                         double q = maxY - p.y;
 
@@ -91,9 +102,9 @@ namespace RayTracer {
             }
         }
 
-        if (std::abs(ray.direction.y) >= 1e-8) {
-            double t = (minY - ray.origin.y) / ray.direction.y;
-            Math::Point3D p = ray.at(t);
+        if (std::abs(localRay.direction.y) >= 1e-8) {
+            double t = (minY - localRay.origin.y) / localRay.direction.y;
+            Math::Point3D p = localRay.at(t);
             double dx = p.x - _center.x;
             double dz = p.z - _center.z;
 
@@ -109,6 +120,7 @@ namespace RayTracer {
 
         obj.t = closest;
         obj.point = ray.at(closest);
+        normal = Math::rotateVector(normal, _rotation).normalize();
 
         if (ray.direction.dot(normal) > 0.0)
             obj.normal = normal * -1.0;

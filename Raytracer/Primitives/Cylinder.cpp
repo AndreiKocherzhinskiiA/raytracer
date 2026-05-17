@@ -7,6 +7,7 @@
 
 #include "Cylinder.hpp"
 #include "../Scene/Factory.hpp"
+#include "../math/Transform.hpp"
 #include <cmath>
 
 namespace RayTracer {
@@ -28,6 +29,12 @@ namespace RayTracer {
     s.lookupValue("radius", radius);
     s.lookupValue("height", height);
     s.lookupValue("material", materialName);
+    if (s.exists("rotation")) {
+        const auto &rotation = s["rotation"];
+        rotation.lookupValue("x", _rotation.x);
+        rotation.lookupValue("y", _rotation.y);
+        rotation.lookupValue("z", _rotation.z);
+    }
 
     _center = Math::Point3D(x, y, z);
     _radius = radius;
@@ -42,9 +49,13 @@ namespace RayTracer {
 
     bool Cylinder::hit(const Ray& ray, HitObject &obj, double tMin, double tMax) const
     {
-        Math::Vector3D oc = ray.origin - _center;
-        double a = ray.direction.x * ray.direction.x + ray.direction.z * ray.direction.z;
-        double halfB = oc.x * ray.direction.x + oc.z * ray.direction.z;
+        Ray localRay(
+            _center + Math::inverseRotateVector(ray.origin - _center, _rotation),
+            Math::inverseRotateVector(ray.direction, _rotation)
+        );
+        Math::Vector3D oc = localRay.origin - _center;
+        double a = localRay.direction.x * localRay.direction.x + localRay.direction.z * localRay.direction.z;
+        double halfB = oc.x * localRay.direction.x + oc.z * localRay.direction.z;
         double c = oc.x * oc.x + oc.z * oc.z - _radius * _radius;
         double minY = _center.y - _height / 2.0;
         double maxY = _center.y + _height / 2.0;
@@ -62,21 +73,21 @@ namespace RayTracer {
                 };
 
                 for (double t : roots) {
-                    double y = ray.at(t).y;
+                    double y = localRay.at(t).y;
                     if (t >= tMin && t <= closest && y >= minY && y <= maxY) {
                         hitAnything = true;
                         closest = t;
                         normal = {
-                            (ray.at(t).x - _center.x) / _radius,
+                            (localRay.at(t).x - _center.x) / _radius,
                             0,
-                            (ray.at(t).z - _center.z) / _radius
+                            (localRay.at(t).z - _center.z) / _radius
                         };
                     }
                 }
             }
         }
 
-        if (std::abs(ray.direction.y) >= 1e-8) {
+        if (std::abs(localRay.direction.y) >= 1e-8) {
             double capYs[2] = {minY, maxY};
             Math::Vector3D capNormals[2] = {
                 {0, -1, 0},
@@ -84,8 +95,8 @@ namespace RayTracer {
             };
 
             for (int i = 0; i < 2; i++) {
-                double t = (capYs[i] - ray.origin.y) / ray.direction.y;
-                Math::Point3D p = ray.at(t);
+                double t = (capYs[i] - localRay.origin.y) / localRay.direction.y;
+                Math::Point3D p = localRay.at(t);
                 double dx = p.x - _center.x;
                 double dz = p.z - _center.z;
 
@@ -102,6 +113,7 @@ namespace RayTracer {
 
         obj.t = closest;
         obj.point = ray.at(closest);
+        normal = Math::rotateVector(normal, _rotation).normalize();
 
         if (ray.direction.dot(normal) > 0.0)
             obj.normal = normal * -1.0;

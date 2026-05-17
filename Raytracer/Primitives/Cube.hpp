@@ -16,6 +16,7 @@ namespace RayTracer {
         double _width;
         double _height;
         double _depth;
+        Math::Vector3D _rotation = {0.0, 0.0, 0.0};
         std::shared_ptr<IMaterial> _material;
 
     public:

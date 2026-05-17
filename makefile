@@ -7,12 +7,14 @@ NAME     = raytracer
 # Core sources — compiled directly into the binary
 CORE_SRCS = Raytracer/main.cpp \
             Raytracer/math/MathCalculations.cpp \
+            Raytracer/math/Transform.cpp \
             Raytracer/Core/Renderer.cpp \
             Raytracer/Core/Lights.cpp \
             Raytracer/Scene/Scene.cpp 
             # Raytracer/Scene/Factory.cpp
 
 CORE_OBJS = $(CORE_SRCS:.cpp=.o)
+TRANSFORM_OBJ = Raytracer/math/Transform.o
 
 # Plugin shared libraries
 PLUGINS = plugins/directional.so \
@@ -48,13 +50,13 @@ plugins/plane.so: Raytracer/Primitives/Plane.cpp
 	$(CXX) $(CXXFLAGS) -shared -o $@ $<
 
 plugins/cylinder.so: Raytracer/Primitives/Cylinder.cpp
-	$(CXX) $(CXXFLAGS) -shared -o $@ $<
+	$(CXX) $(CXXFLAGS) -shared -o $@ $< $(TRANSFORM_OBJ)
 
 plugins/cone.so: Raytracer/Primitives/Cone.cpp
-	$(CXX) $(CXXFLAGS) -shared -o $@ $<
+	$(CXX) $(CXXFLAGS) -shared -o $@ $< $(TRANSFORM_OBJ)
 
 plugins/cube.so: Raytracer/Primitives/Cube.cpp
-	$(CXX) $(CXXFLAGS) -shared -o $@ $<
+	$(CXX) $(CXXFLAGS) -shared -o $@ $< $(TRANSFORM_OBJ)
 
 # Materials
 plugins/flatcolor.so: Raytracer/Materials/FlatColor.cpp

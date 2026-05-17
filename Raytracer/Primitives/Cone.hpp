@@ -23,6 +23,7 @@ namespace RayTracer {
         Math::Point3D _center;
         double _radius;
         double _height;
+        Math::Vector3D _rotation = {0.0, 0.0, 0.0};
         std::shared_ptr<IMaterial> _material;
 
     public:
