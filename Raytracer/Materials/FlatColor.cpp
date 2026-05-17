@@ -6,10 +6,10 @@ namespace RayTracer {
         FlatColor::FlatColor(const Color c): _color(c){};
         FlatColor::FlatColor(const libconfig::Setting& s) {
 
-            const auto &c = s["color"];
-            double r = 255, g = 255, b = 255;
+            double r = 255.0, g = 255.0, b = 255.0;
 
             if(s.exists("color")) {
+                const auto &c = s["color"];
                 c.lookupValue("r", r);
                 c.lookupValue("g", g);
                 c.lookupValue("b", b);

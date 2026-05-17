@@ -8,10 +8,15 @@ Scene::Scene() {}
 
 void Scene::loadCam(const libconfig::Setting &camera)
 {
-    double x = 0, y = 0, z = 0;
-    double dx = 0, dy = 0, dz = 0;
+    double x = 0;
+    double y = 0;
+    double z = 0;
+    double dx = 0;
+    double dy = 0;
+    double dz = 0;
     double fov = 90.0;
-    int width = 1080, height = 720;
+    double width = 1080.0;
+    double height = 720.0;
 
     camera["position"].lookupValue("x", x);
     camera["position"].lookupValue("y", y);
@@ -23,7 +28,7 @@ void Scene::loadCam(const libconfig::Setting &camera)
     camera["resolution"].lookupValue("width", width);
     camera["resolution"].lookupValue("height", height);
 
-    _cam = Camera(width, height, Math::Point3D(x, y, z), fov);
+    _cam = Camera(static_cast<int>(width), static_cast<int>(height), Math::Point3D(x, y, z), fov);
     _cam.makeScreen();
 }
 

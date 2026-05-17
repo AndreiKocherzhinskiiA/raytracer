@@ -7,8 +7,12 @@
 namespace RayTracer {
     PointLight::PointLight(const libconfig::Setting& s)
     {
-        double x = 0, y = 0, z = 0;
-        double r = 1.0, g = 1.0, b = 1.0;
+        double x = 0;
+        double y = 0;
+        double z = 0;
+        double r = 1.0;
+        double g = 1.0;
+        double b = 1.0;
 
         s.lookupValue("x", x);
         s.lookupValue("y", y);

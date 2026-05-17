@@ -8,8 +8,10 @@ namespace RayTracer {
 
     Sphere::Sphere(const libconfig::Setting &s)
     {
-        int x = 0, y = 0, z = 0;
-        int r = 0;
+        double x = 0.0;
+        double y = 0.0;
+        double z = 0.0;
+        double r = 0.0;
 
         s.lookupValue("x", x);
         s.lookupValue("y", y);

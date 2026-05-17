@@ -5,7 +5,9 @@
 namespace RayTracer {
     Reflection::Reflection(const libconfig::Setting &s)
     {
-        double r = 255.0, g = 255.0, b = 255.0;
+        double r = 255.0;
+        double g = 255.0;
+        double b = 255.0;
 
     if (s.exists("color")) {
         const auto &c = s["color"];

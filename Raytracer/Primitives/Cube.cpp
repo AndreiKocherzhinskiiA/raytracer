@@ -45,7 +45,9 @@ namespace {
 namespace RayTracer {
     Cube::Cube (const libconfig::Setting &s)
     {
-        int x = 0, y = 0, z = 0;
+        double x = 0.0;
+        double y = 0.0;
+        double z = 0.0;
 
         double width = 1;
         double height = 1;
